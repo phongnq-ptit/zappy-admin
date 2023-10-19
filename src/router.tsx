@@ -7,15 +7,18 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
+const login = localStorage.getItem('login');
+
+const getElement = (element: any) => {
+  return login ? element : <Navigate to="/" replace />;
+};
+
 const Loader = (Component) => (props) =>
   (
     <Suspense fallback={<SuspenseLoader />}>
       <Component {...props} />
     </Suspense>
   );
-
-// Pages
-const Overview = Loader(lazy(() => import('src/content/overview')));
 
 // Dashboards
 const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
@@ -33,6 +36,13 @@ const ManageMusic = Loader(
 const ManageComic = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageComic'))
 );
+const ManageAuthors = Loader(
+  lazy(() => import('src/content/pages/Main/Management/ManageAuthors'))
+);
+const ManageGenres = Loader(
+  lazy(() => import('src/content/pages/Main/Management/ManageGenres'))
+);
+
 const Login = Loader(
   lazy(() => import('src/content/pages/Main/Account/Login'))
 );
@@ -55,7 +65,11 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <Login />
+        element: !login ? (
+          <Login />
+        ) : (
+          <Navigate to="/dashboards/overview" replace />
+        )
       },
       {
         path: 'login',
@@ -77,7 +91,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'overview',
-        element: <Crypto />
+        element: getElement(<Crypto />)
       }
     ]
   },
@@ -91,19 +105,27 @@ const routes: RouteObject[] = [
       },
       {
         path: 'users',
-        element: <ManageAccount />
+        element: getElement(<ManageAccount />)
       },
       {
         path: 'comics',
-        element: <ManageComic />
+        element: getElement(<ManageComic />)
       },
       {
         path: 'musics',
-        element: <ManageMusic />
+        element: getElement(<ManageMusic />)
       },
       {
         path: 'movies',
-        element: <ManageMovie />
+        element: getElement(<ManageMovie />)
+      },
+      {
+        path: 'genres',
+        element: getElement(<ManageGenres />)
+      },
+      {
+        path: 'authors',
+        element: getElement(<ManageAuthors />)
       }
     ]
   },
@@ -117,11 +139,11 @@ const routes: RouteObject[] = [
       },
       {
         path: 'infomation',
-        element: <Info />
+        element: getElement(<Info />)
       },
       {
         path: 'logout',
-        element: <Logout />
+        element: getElement(<Logout />)
       }
     ]
   }

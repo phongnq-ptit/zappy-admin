@@ -11,26 +11,15 @@ import {
 } from '@mui/material';
 import { NavLink as RouterLink } from 'react-router-dom';
 import { SidebarContext } from 'src/contexts/SidebarContext';
-
-import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
-import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
-import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
-import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
-import BeachAccessTwoToneIcon from '@mui/icons-material/BeachAccessTwoTone';
-import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
-import FilterVintageTwoToneIcon from '@mui/icons-material/FilterVintageTwoTone';
-import HowToVoteTwoToneIcon from '@mui/icons-material/HowToVoteTwoTone';
-import LocalPharmacyTwoToneIcon from '@mui/icons-material/LocalPharmacyTwoTone';
-import RedeemTwoToneIcon from '@mui/icons-material/RedeemTwoTone';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import TrafficTwoToneIcon from '@mui/icons-material/TrafficTwoTone';
-import CheckBoxTwoToneIcon from '@mui/icons-material/CheckBoxTwoTone';
-import ChromeReaderModeTwoToneIcon from '@mui/icons-material/ChromeReaderModeTwoTone';
-import WorkspacePremiumTwoToneIcon from '@mui/icons-material/WorkspacePremiumTwoTone';
-import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
-import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
+import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
+import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -196,7 +185,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/dashboards/overview"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<AssessmentOutlinedIcon />}
                 >
                   Thống Kê
                 </Button>
@@ -220,7 +209,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/management/users"
-                  startIcon={<BallotTwoToneIcon />}
+                  startIcon={<ManageAccountsOutlinedIcon />}
                 >
                   Người dùng
                 </Button>
@@ -231,7 +220,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/management/comics"
-                  startIcon={<BeachAccessTwoToneIcon />}
+                  startIcon={<AutoStoriesOutlinedIcon />}
                 >
                   Truyện
                 </Button>
@@ -242,7 +231,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/management/musics"
-                  startIcon={<EmojiEventsTwoToneIcon />}
+                  startIcon={<LibraryMusicOutlinedIcon />}
                 >
                   Nhạc
                 </Button>
@@ -253,9 +242,31 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/management/movies"
-                  startIcon={<FilterVintageTwoToneIcon />}
+                  startIcon={<MovieOutlinedIcon />}
                 >
                   Phim
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/genres"
+                  startIcon={<CategoryOutlinedIcon />}
+                >
+                  Thể loại
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/authors"
+                  startIcon={<PeopleAltOutlinedIcon />}
+                >
+                  Tác giả
                 </Button>
               </ListItem>
             </List>
@@ -288,7 +299,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/account/logout"
-                  startIcon={<DisplaySettingsTwoToneIcon />}
+                  startIcon={<ExitToAppOutlinedIcon />}
                 >
                   Đăng xuất
                 </Button>

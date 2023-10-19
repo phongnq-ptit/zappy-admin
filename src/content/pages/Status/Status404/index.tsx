@@ -31,7 +31,7 @@ function Status404() {
           </Box>
           <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', mt: 3, p: 4 }}>
-              <Button href="/overview" variant="outlined">
+              <Button href="/" variant="outlined">
                 QUAY LẠI TRANG CHÍNH
               </Button>
             </Box>
