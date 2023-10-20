@@ -184,7 +184,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/dashboards/overview"
+                  to="/overview"
                   startIcon={<AssessmentOutlinedIcon />}
                 >
                   Thống Kê
@@ -208,7 +208,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/users"
+                  to="/users"
                   startIcon={<ManageAccountsOutlinedIcon />}
                 >
                   Người dùng
@@ -219,7 +219,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/comics"
+                  to="/comics"
                   startIcon={<AutoStoriesOutlinedIcon />}
                 >
                   Truyện
@@ -230,7 +230,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/musics"
+                  to="/musics"
                   startIcon={<LibraryMusicOutlinedIcon />}
                 >
                   Nhạc
@@ -241,7 +241,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/movies"
+                  to="/movies"
                   startIcon={<MovieOutlinedIcon />}
                 >
                   Phim
@@ -252,7 +252,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/genres"
+                  to="/genres"
                   startIcon={<CategoryOutlinedIcon />}
                 >
                   Thể loại
@@ -263,7 +263,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/authors"
+                  to="/authors"
                   startIcon={<PeopleAltOutlinedIcon />}
                 >
                   Tác giả
@@ -287,7 +287,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/account/infomation"
+                  to="/infomation"
                   startIcon={<AccountCircleTwoToneIcon />}
                 >
                   Thông tin cá nhân
@@ -298,7 +298,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/account/logout"
+                  to="/logout"
                   startIcon={<ExitToAppOutlinedIcon />}
                 >
                   Đăng xuất

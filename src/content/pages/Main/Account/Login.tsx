@@ -6,12 +6,13 @@ import { useForm } from 'react-hook-form';
 import FormInput from 'src/components/Input/FormInput';
 import useUserApi from 'src/hooks/useUserApi';
 import { UserLogin } from 'src/types/interfaces/User';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { GlobalContext } from 'src/contexts/GlobalContext';
 import _ from 'lodash';
 import { useNavigate } from 'react-router';
 import { LoadingButton } from '@mui/lab';
 import { UserRole } from 'src/types/enums/UserRole';
+import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -95,12 +96,6 @@ function Login() {
   const navigate = useNavigate();
   const loginLocal = localStorage.getItem('login');
 
-  useEffect(() => {
-    if (loginLocal) {
-      window.location.reload();
-    }
-  }, [loginLocal]);
-
   const submit = (data: UserLogin) => {
     setLoadingBtn(true);
     login(data)
@@ -126,10 +121,11 @@ function Login() {
           JSON.stringify(_.pick(response.data, ['accessToken', 'refreshToken']))
         );
         setLoginUser(response.data);
+        SuccessSnackbar('Đăng nhập thành công!');
 
         setTimeout(() => {
           setLoadingBtn(false);
-          navigate('/dashboards/overview');
+          navigate('/overview');
         }, 2000);
       })
       .catch((e) => console.log(e));

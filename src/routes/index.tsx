@@ -6,12 +6,7 @@ import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
-
-const login = localStorage.getItem('login');
-
-const getElement = (element: any) => {
-  return login ? element : <Navigate to="/" replace />;
-};
+import { Pathname } from './path';
 
 const Loader = (Component) => (props) =>
   (
@@ -65,11 +60,7 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: !login ? (
-          <Login />
-        ) : (
-          <Navigate to="/dashboards/overview" replace />
-        )
+        element: <Login />
       },
       {
         path: 'login',
@@ -82,7 +73,7 @@ const routes: RouteObject[] = [
     ]
   },
   {
-    path: 'dashboards',
+    path: '',
     element: <SidebarLayout />,
     children: [
       {
@@ -90,60 +81,44 @@ const routes: RouteObject[] = [
         element: <Navigate to="overview" replace />
       },
       {
-        path: 'overview',
-        element: getElement(<Crypto />)
-      }
-    ]
-  },
-  {
-    path: 'management',
-    element: <SidebarLayout />,
-    children: [
-      {
-        path: '',
-        element: <Navigate to="users" replace />
+        path: Pathname.overview,
+        element: <Crypto />
       },
       {
-        path: 'users',
-        element: getElement(<ManageAccount />)
+        path: Pathname.users,
+        element: <ManageAccount />
       },
       {
-        path: 'comics',
-        element: getElement(<ManageComic />)
+        path: Pathname.comics,
+        element: <ManageComic />
       },
       {
-        path: 'musics',
-        element: getElement(<ManageMusic />)
+        path: Pathname.musics,
+        element: <ManageMusic />
       },
       {
-        path: 'movies',
-        element: getElement(<ManageMovie />)
+        path: Pathname.movies,
+        element: <ManageMovie />
       },
       {
-        path: 'genres',
-        element: getElement(<ManageGenres />)
+        path: Pathname.genres,
+        element: <ManageGenres />
       },
       {
-        path: 'authors',
-        element: getElement(<ManageAuthors />)
-      }
-    ]
-  },
-  {
-    path: 'account',
-    element: <SidebarLayout />,
-    children: [
-      {
-        path: '',
-        element: <Navigate to="infomation" replace />
+        path: Pathname.authors,
+        element: <ManageAuthors />
       },
       {
-        path: 'infomation',
-        element: getElement(<Info />)
+        path: Pathname.infomation,
+        element: <Info />
       },
       {
         path: 'logout',
-        element: getElement(<Logout />)
+        element: <Logout />
+      },
+      {
+        path: '*',
+        element: <Status404 />
       }
     ]
   }
