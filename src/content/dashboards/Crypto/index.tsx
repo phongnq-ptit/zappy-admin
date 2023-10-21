@@ -13,7 +13,7 @@ function DashboardCrypto() {
   return (
     <>
       <Helmet>
-        <title>Zappy Dashboard</title>
+        <title>Thống Kê | Zappy</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />

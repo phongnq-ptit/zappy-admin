@@ -1,6 +1,16 @@
 import axios, { AxiosInstance } from 'axios';
 
+interface IToken {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export default function useApi() {
+  const login = localStorage.getItem('login');
+  const token: IToken = login
+    ? JSON.parse(login)
+    : { accessToken: '', refreshToken: '' };
+
   async function AXIOS(): Promise<AxiosInstance> {
     let instance: AxiosInstance;
 
@@ -48,7 +58,8 @@ export default function useApi() {
       baseURL: process.env.REACT_APP_API_URL,
       headers: {
         ContentType: 'application/json',
-        Accept: 'application/json'
+        Accept: 'application/json',
+        Authorization: `Bearer ${token.accessToken}`
       }
     };
   };

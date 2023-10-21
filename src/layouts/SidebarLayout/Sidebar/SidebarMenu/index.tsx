@@ -287,7 +287,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/infomation"
+                  to="/information"
                   startIcon={<AccountCircleTwoToneIcon />}
                 >
                   Thông tin cá nhân

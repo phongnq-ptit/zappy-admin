@@ -21,16 +21,15 @@ function App() {
   const isLogged = localStorage.getItem('login');
 
   useEffect(() => {
-    if (
+    if (!isLogged) {
+      navigate('/login');
+    } else if (
       isLogged &&
       !Object.values(Pathname).some((value) =>
         window.location.pathname.includes(`${value}`)
       )
     ) {
       navigate(Pathname.overview);
-    }
-    if (!isLogged) {
-      navigate('/');
     }
   }, [isLogged]);
 

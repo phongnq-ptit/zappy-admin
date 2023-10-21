@@ -6,7 +6,7 @@ export interface UserLogin {
 }
 
 export interface User {
-  id: string;
+  id: number;
   createdAt: Date;
   updatedAt: Date;
   username: string;
@@ -19,3 +19,17 @@ export interface User {
   accessToken: string;
   refreshToken: string;
 }
+
+export const generateDefauleUser = () =>
+  ({
+    id: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    username: '',
+    email: '',
+    address: '',
+    phone: '',
+    isActive: true,
+    role: UserRole.ADMIN,
+    provider: 1
+  } as User);

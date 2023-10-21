@@ -6,5 +6,5 @@ export const Pathname = {
   movies: 'movies',
   genres: 'genres',
   authors: 'authors',
-  infomation: 'infomation'
+  infomation: 'information'
 };

@@ -1,7 +1,15 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const Infomation = () => {
-  return <div>Infomation</div>;
+  return (
+    <>
+      <Helmet>
+        <title>Thông tin cá nhân | Zappy</title>
+      </Helmet>
+      <div>Infomation</div>
+    </>
+  );
 };
 
 export default Infomation;

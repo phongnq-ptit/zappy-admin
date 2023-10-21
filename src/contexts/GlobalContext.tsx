@@ -1,5 +1,5 @@
 import { FC, useState, createContext } from 'react';
-import { User } from 'src/types/interfaces/User';
+import { User, generateDefauleUser } from 'src/types/interfaces/User';
 
 interface IError {
   isError: boolean;
@@ -18,7 +18,11 @@ export const GlobalContext = createContext<GlobalContext>({} as GlobalContext);
 
 export const GlobalContextProvider: FC = ({ children }) => {
   const [gError, setGError] = useState({ isError: false, message: '' });
-  const [LoginUser, setLoginUser] = useState<User>();
+
+  const user = localStorage.getItem('user');
+  const [LoginUser, setLoginUser] = useState<User>(
+    user ? JSON.parse(user) : generateDefauleUser()
+  );
 
   return (
     <GlobalContext.Provider

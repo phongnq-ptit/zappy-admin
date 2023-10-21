@@ -89,7 +89,7 @@ function HeaderMenu() {
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
-            to="/management/users"
+            to="/users"
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}
@@ -100,7 +100,7 @@ function HeaderMenu() {
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
-            to="/management/comics"
+            to="/comics"
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}
@@ -111,7 +111,7 @@ function HeaderMenu() {
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
-            to="/management/musics"
+            to="/musics"
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}
@@ -122,7 +122,7 @@ function HeaderMenu() {
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
-            to="/management/movies"
+            to="/movies"
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}

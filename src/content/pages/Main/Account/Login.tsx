@@ -120,6 +120,10 @@ function Login() {
           'login',
           JSON.stringify(_.pick(response.data, ['accessToken', 'refreshToken']))
         );
+        localStorage.setItem(
+          'user',
+          JSON.stringify(_.omit(response.data, ['accessToken', 'refreshToken']))
+        );
         setLoginUser(response.data);
         SuccessSnackbar('Đăng nhập thành công!');
 
@@ -134,7 +138,7 @@ function Login() {
   return (
     <OverviewWrapper>
       <Helmet>
-        <title>Zappy - Đăng Nhập</title>
+        <title>Đăng Nhập | Zappy</title>
       </Helmet>
       <Container maxWidth="lg">
         <Card sx={{ p: 5, mb: 4, mt: 18, borderRadius: 12 }}>
