@@ -18,7 +18,7 @@ function Footer() {
       >
         <Box>
           <Typography variant="subtitle1">
-            &copy; 2022 - Tokyo Free White React Typescript Admin Dashboard
+            &copy; 2023 - Hệ thống quản trị ứng dụng Zappy.
           </Typography>
         </Box>
         <Typography
@@ -28,12 +28,8 @@ function Footer() {
           variant="subtitle1"
         >
           Crafted by{' '}
-          <Link
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            BloomUI.com
+          <Link href="#" target="_blank" rel="noopener noreferrer">
+            Đồ án 2023
           </Link>
         </Typography>
       </Box>

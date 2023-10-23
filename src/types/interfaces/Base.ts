@@ -25,3 +25,21 @@ export interface ApiListResponse<T> {
   };
   meta: Record<string, any>;
 }
+
+interface IQueryParams {
+  page: number;
+  limit: number;
+  search: string;
+  sortBy: string[];
+  filter: string;
+}
+
+export type QueryParams = Partial<IQueryParams>;
+
+export interface ListMetadata {
+  itemsPerPage: number;
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+  sortBy?: string[][];
+}
