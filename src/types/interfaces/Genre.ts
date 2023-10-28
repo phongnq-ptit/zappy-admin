@@ -7,3 +7,8 @@ export interface Genre {
   name: string;
   type: TypeItem;
 }
+
+export interface INewGenre {
+  name: string;
+  type: TypeItem;
+}
