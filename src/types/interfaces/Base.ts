@@ -43,3 +43,10 @@ export interface ListMetadata {
   totalPages: number;
   sortBy?: string[][];
 }
+
+export const defaultListMetadata: ListMetadata = {
+  itemsPerPage: 10,
+  totalItems: 0,
+  currentPage: 1,
+  totalPages: 1
+};

@@ -21,11 +21,12 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {
   ApiListResponse,
   ListMetadata,
-  QueryParams
+  QueryParams,
+  defaultListMetadata
 } from 'src/types/interfaces/Base';
-import TypeChip from '../Common/Media/TypeChip';
-import SkeletonGenre from '../Common/Media/SkeletonGenre';
-import FilterMedia from '../Common/Media/FilterMedia';
+import TypeChip from '../../../../../components/Common/Media/TypeChip';
+import SkeletonGenre from './SkeletonGenre';
+import FilterMedia from './FilterMedia';
 
 interface Props {
   api: (params: QueryParams) => Promise<ApiListResponse<Genre[]>>;
@@ -34,12 +35,8 @@ interface Props {
 const GenreLists = (props: Props) => {
   const theme = useTheme();
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [listMetadata, setListMetadata] = useState<ListMetadata>({
-    itemsPerPage: 0,
-    totalItems: 0,
-    currentPage: 0,
-    totalPages: 0
-  });
+  const [listMetadata, setListMetadata] =
+    useState<ListMetadata>(defaultListMetadata);
   const [queryParams, setQueryParams] = useState<QueryParams>({
     limit: 10,
     page: 1,

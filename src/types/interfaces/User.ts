@@ -13,11 +13,25 @@ export interface User {
   email: string;
   address: string;
   phone: string;
+  golds: number;
   isActive: boolean;
   role: UserRole;
   provider: number;
+  profiles?: Pick<Profile, 'id' | 'avatar' | 'nickname'>[];
   accessToken: string;
   refreshToken: string;
+}
+
+export interface Profile {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  nickname: string;
+  birthday: string;
+  avatar: string;
+  role: UserRole;
+  progress: number;
+  isLocked: boolean;
 }
 
 export const generateDefauleUser = () =>

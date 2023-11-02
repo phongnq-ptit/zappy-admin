@@ -15,7 +15,7 @@ interface Props {
   setSearch: (search: string | undefined) => void;
 }
 
-const FilterMedia = (props: Props) => {
+const FilterGenre = (props: Props) => {
   const [searchStr, setSearchStr] = useState<string>(
     props.search === undefined ? '' : props.search
   );
@@ -87,4 +87,4 @@ const FilterMedia = (props: Props) => {
   );
 };
 
-export default FilterMedia;
+export default FilterGenre;

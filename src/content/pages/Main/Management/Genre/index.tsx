@@ -2,11 +2,11 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Grid, Tab, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import GenreLists from 'src/components/Main/ManageGenres/GenreLists';
+import GenreLists from 'src/content/pages/Main/Management/Genre/GenreLists';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import useGenreApi from 'src/hooks/useGenreApi';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import AddNewGenreDialog from 'src/components/Main/ManageGenres/AddNewGenreDialog';
+import AddNewGenreDialog from './AddNewGenreDialog';
 
 enum Tabs {
   ALL = 'all',

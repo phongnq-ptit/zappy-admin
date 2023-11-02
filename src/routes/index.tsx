@@ -20,7 +20,10 @@ const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
 
 // Applications
 const ManageAccount = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageAccount'))
+  lazy(() => import('src/content/pages/Main/Management/Account'))
+);
+const AccountDetail = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Account/AccountDetail'))
 );
 const ManageMovie = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageMovie'))
@@ -35,7 +38,7 @@ const ManageAuthors = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageAuthors'))
 );
 const ManageGenres = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageGenres'))
+  lazy(() => import('src/content/pages/Main/Management/Genre'))
 );
 
 const Login = Loader(
@@ -90,6 +93,10 @@ const routes: RouteObject[] = [
       {
         path: Pathname.users,
         element: <ManageAccount />
+      },
+      {
+        path: `${Pathname.users}/:userId`,
+        element: <AccountDetail />
       },
       {
         path: Pathname.comics,
