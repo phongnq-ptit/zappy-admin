@@ -9,15 +9,16 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import React, { useState } from 'react';
+import { QueryParams } from 'src/types/interfaces/Base';
 
 interface Props {
-  search: string | undefined;
-  setSearch: (search: string | undefined) => void;
+  query: QueryParams;
+  setQuery: (query: QueryParams) => void;
 }
 
 const FilterGenre = (props: Props) => {
   const [searchStr, setSearchStr] = useState<string>(
-    props.search === undefined ? '' : props.search
+    props.query.search === undefined ? '' : props.query.search
   );
 
   const onChangeSearch = (event: React.ChangeEvent) => {
@@ -26,11 +27,16 @@ const FilterGenre = (props: Props) => {
 
   const handleClear = () => {
     setSearchStr('');
-    if (props.search !== undefined) props.setSearch(undefined);
+    if (props.query.search !== undefined)
+      props.setQuery({ ...props.query, page: 1, search: undefined });
   };
 
   const handleSearch = () => {
-    props.setSearch(!searchStr ? undefined : searchStr);
+    props.setQuery({
+      ...props.query,
+      page: 1,
+      search: !searchStr ? undefined : searchStr
+    });
   };
 
   return (
@@ -78,9 +84,9 @@ const FilterGenre = (props: Props) => {
         </FormControl>
       </Grid>
       <Grid item xs={6}></Grid>
-      {props.search && (
+      {props.query.search && (
         <Grid item xs={12}>
-          <b>Kết quả tìm kiếm của: </b> <i>{props.search}</i>
+          <b>Kết quả tìm kiếm của: </b> <i>{props.query.search}</i>
         </Grid>
       )}
     </Grid>

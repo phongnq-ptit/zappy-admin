@@ -35,7 +35,8 @@ const GlobalErrorDialog = () => {
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth="md"
+      maxWidth="sm"
+      fullWidth={true}
     >
       <DialogTitle id="alert-dialog-title" sx={{ fontWeight: 700 }}>
         <Box

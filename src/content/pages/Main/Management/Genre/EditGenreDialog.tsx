@@ -10,8 +10,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import FormInput from 'src/components/Input/FormInput';
 import { Controller, useForm } from 'react-hook-form';
-import { INewGenre } from 'src/types/interfaces/Genre';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Genre, INewGenre } from 'src/types/interfaces/Genre';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField
+} from '@mui/material';
 import { TypeItem } from 'src/types/enums/TypeItem';
 import useGenreApi from 'src/hooks/useGenreApi';
 import { LoadingButton } from '@mui/lab';
@@ -29,19 +36,20 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
+  genre: Genre;
 }
 
-const AddNewGenreDialog = (props: Props) => {
+const EditGenreDialog = (props: Props) => {
   const theme = useTheme();
   const { handleSubmit, control, reset } = useForm();
-  const { createGenre } = useGenreApi();
+  const { updateGenre } = useGenreApi();
   const [loadingBtn, setLoadingBtn] = React.useState(false);
 
   const save = (data: INewGenre) => {
     setLoadingBtn(true);
-    createGenre({ ...data })
+    updateGenre(props.genre.id, { ...data })
       .then((response) => {
-        SuccessSnackbar('Tạo thể loại mới thành công! Vui lòng tải lại trang.');
+        SuccessSnackbar('Cập thể loại thành công! Vui lòng tải lại trang.');
       })
       .finally(() => {
         setLoadingBtn(false);
@@ -49,6 +57,10 @@ const AddNewGenreDialog = (props: Props) => {
         props.setOpen(false);
       });
   };
+
+  React.useEffect(() => {
+    reset();
+  }, [props.genre]);
 
   const handleClose = () => {
     reset();
@@ -74,7 +86,7 @@ const AddNewGenreDialog = (props: Props) => {
           }}
           id="customized-dialog-title"
         >
-          Thêm thể loại mới
+          Cập Nhật Thể Loại
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -91,14 +103,25 @@ const AddNewGenreDialog = (props: Props) => {
         <DialogContent dividers>
           <form id="form-add-genre" onSubmit={handleSubmit(save)}>
             <Box sx={{ width: '100%', mb: 2 }}>
-              <FormInput
+              <Controller
                 name="name"
-                label="Tên Thể loại"
                 control={control}
-                defaultValue={''}
-                rules={{
-                  required: 'Không được để trống!'
-                }}
+                defaultValue={props.genre.name}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <TextField
+                    label={'Tên thể loại'}
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!!error}
+                    helperText={error ? error.message : null}
+                    fullWidth
+                  />
+                )}
+                rules={{ required: 'Không được để trống!' }}
               />
             </Box>
             <FormControl sx={{ width: '100%' }}>
@@ -106,10 +129,19 @@ const AddNewGenreDialog = (props: Props) => {
               <Controller
                 name="type"
                 control={control}
-                defaultValue={TypeItem.Comics}
+                defaultValue={Number(props.genre.type)}
                 rules={{ required: 'Trường này bắt buộc' }}
-                render={({ field }) => (
-                  <Select labelId="select-label" {...field} label="Loại">
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <Select
+                    labelId="select-label"
+                    value={value}
+                    onChange={onChange}
+                    error={!!error}
+                    label="Loại"
+                  >
                     <MenuItem value={TypeItem.Comics}>Truyện</MenuItem>
                     <MenuItem value={TypeItem.Movies}>Phim</MenuItem>
                     <MenuItem value={TypeItem.Music}>Nhạc</MenuItem>
@@ -128,7 +160,7 @@ const AddNewGenreDialog = (props: Props) => {
             color={loadingBtn ? 'secondary' : 'primary'}
             autoFocus
           >
-            <span>Thêm mới</span>
+            <span>Cập nhật</span>
           </LoadingButton>
           <Button
             variant="outlined"
@@ -144,4 +176,4 @@ const AddNewGenreDialog = (props: Props) => {
   );
 };
 
-export default AddNewGenreDialog;
+export default EditGenreDialog;

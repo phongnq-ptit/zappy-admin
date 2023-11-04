@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { useContext } from 'react';
+import { GlobalContext } from 'src/contexts/GlobalContext';
 
 interface IToken {
   accessToken: string;
@@ -10,6 +12,7 @@ export default function useApi() {
   const token: IToken = login
     ? JSON.parse(login)
     : { accessToken: '', refreshToken: '' };
+  const { setGError } = useContext(GlobalContext);
 
   async function AXIOS(): Promise<AxiosInstance> {
     let instance: AxiosInstance;
@@ -21,6 +24,7 @@ export default function useApi() {
         return response.data;
       },
       (error) => {
+        setGError({ isError: true, message: error.response.data.message });
         return Promise.reject(error);
       }
     );

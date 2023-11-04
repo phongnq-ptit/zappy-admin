@@ -4,10 +4,10 @@ import {
   ApiSingleResponse,
   QueryParams
 } from 'src/types/interfaces/Base';
-import { Genre } from 'src/types/interfaces/Genre';
+import { Genre, INewGenre } from 'src/types/interfaces/Genre';
 
 const useGenreApi = () => {
-  const { GET, POST } = useApi();
+  const { GET, POST, PATCH } = useApi();
   const baseUrl = '/genre';
 
   async function getGenreAll(
@@ -35,9 +35,16 @@ const useGenreApi = () => {
   }
 
   async function createGenre(
-    newGenre: Genre
+    newGenre: INewGenre
   ): Promise<ApiSingleResponse<Genre>> {
     return POST<ApiSingleResponse<Genre>>(baseUrl, newGenre);
+  }
+
+  async function updateGenre(
+    id: number,
+    genreUpdate: Partial<INewGenre>
+  ): Promise<ApiSingleResponse<Genre>> {
+    return PATCH<ApiSingleResponse<Genre>>(baseUrl + `/${id}`, genreUpdate);
   }
 
   return {
@@ -45,7 +52,8 @@ const useGenreApi = () => {
     getGenreComic,
     getGenreMovie,
     getGenreMusic,
-    createGenre
+    createGenre,
+    updateGenre
   };
 };
 

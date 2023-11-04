@@ -132,7 +132,10 @@ function Login() {
           navigate('/overview');
         }, 2000);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e))
+      .finally(() => {
+        setLoadingBtn(false);
+      });
   };
 
   return (
