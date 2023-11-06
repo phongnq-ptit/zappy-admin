@@ -16,28 +16,28 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Genre } from 'src/types/interfaces/Genre';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import TypeChip from 'src/components/Common/Media/TypeChip';
+import { Author } from 'src/types/interfaces/Author';
 import {
   ApiListResponse,
   ListMetadata,
   QueryParams,
   defaultListMetadata
 } from 'src/types/interfaces/Base';
-import TypeChip from '../../../../../components/Common/Media/TypeChip';
-import SkeletonGenre from './SkeletonGenre';
-import FilterMedia from './FilterMedia';
-import EditGenreDialog from './EditGenreDialog';
-import { TypeItem } from 'src/types/enums/TypeItem';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import SkeletonAuthors from './SkeletonAuthors';
+import FilterAuthor from './FilterAuthor';
+import TextTruncate from 'react-text-truncate';
+import { MediaTabs } from 'src/types/enums/MediaTabs';
 
 interface Props {
   reload: boolean;
-  api: (params: QueryParams) => Promise<ApiListResponse<Genre[]>>;
+  api: (params: QueryParams) => Promise<ApiListResponse<Author[]>>;
 }
 
-const GenreLists = (props: Props) => {
+const AuthorLists = (props: Props) => {
   const theme = useTheme();
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const [authors, setAuthors] = useState<Author[]>([]);
   const [listMetadata, setListMetadata] =
     useState<ListMetadata>(defaultListMetadata);
   const [queryParams, setQueryParams] = useState<QueryParams>({
@@ -47,14 +47,14 @@ const GenreLists = (props: Props) => {
   });
   const [loading, setLoading] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
+  // const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
 
   useEffect(() => {
     setLoading(true);
     props
       .api(queryParams)
       .then((response) => {
-        setGenres(response.data.results);
+        setAuthors(response.data.results);
         setListMetadata(response.data.metadata);
       })
       .catch((e) => console.log(e))
@@ -86,7 +86,7 @@ const GenreLists = (props: Props) => {
     <React.Fragment>
       <Grid container spacing={2} flexDirection="column">
         <Grid item>
-          <FilterMedia query={queryParams} setQuery={setQueryParams} />
+          <FilterAuthor query={queryParams} setQuery={setQueryParams} />
         </Grid>
         <Grid item>
           <Card>
@@ -95,20 +95,22 @@ const GenreLists = (props: Props) => {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    <TableCell>Tên Thể Loại</TableCell>
-                    <TableCell align="right">Ngày Tạo</TableCell>
-                    <TableCell align="right">Ngày Cập Nhật</TableCell>
+                    <TableCell>Tên tác giả</TableCell>
+                    <TableCell align="center" sx={{ maxWidth: '10rem' }}>
+                      Mô tả
+                    </TableCell>
+                    <TableCell align="right">Ngày Tạo/Cập Nhật</TableCell>
                     <TableCell align="right">Loại</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {loading ? (
-                    <SkeletonGenre />
+                    <SkeletonAuthors />
                   ) : (
-                    genres.map((genre, index) => {
+                    authors.map((author, index) => {
                       return (
-                        <TableRow hover key={genre.id}>
+                        <TableRow hover key={author.id}>
                           <TableCell>
                             <Typography
                               variant="body1"
@@ -128,8 +130,16 @@ const GenreLists = (props: Props) => {
                               gutterBottom
                               noWrap
                             >
-                              {genre.name}
+                              {author.name}
                             </Typography>
+                          </TableCell>
+                          <TableCell align="center" sx={{ maxWidth: '10rem' }}>
+                            <TextTruncate
+                              line={2}
+                              element="span"
+                              truncateText="…"
+                              text={author.description}
+                            />
                           </TableCell>
                           <TableCell align="right">
                             <Typography
@@ -138,29 +148,27 @@ const GenreLists = (props: Props) => {
                               noWrap
                             >
                               {format(
-                                new Date(genre.createdAt),
+                                new Date(author.createdAt),
                                 'HH:mm, dd/MM/yyy'
                               )}
                             </Typography>
-                          </TableCell>
-                          <TableCell align="right">
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               noWrap
                             >
                               {format(
-                                new Date(genre.updatedAt),
+                                new Date(author.updatedAt),
                                 'HH:mm, dd/MM/yyy'
                               )}
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
-                            <TypeChip type={genre.type} />
+                            <TypeChip type={author.type} />
                           </TableCell>
                           <TableCell align="right">
                             <Tooltip
-                              title="Cập nhật thông tin thể loại"
+                              title="Cập nhật thông tin tác giả"
                               arrow
                               placement="top"
                             >
@@ -173,10 +181,10 @@ const GenreLists = (props: Props) => {
                                 }}
                                 color="inherit"
                                 size="small"
-                                onClick={() => {
-                                  setGenreEdit(genre);
-                                  setOpenEdit(true);
-                                }}
+                                //   onClick={() => {
+                                //     setGenreEdit(genre);
+                                //     setOpenEdit(true);
+                                //   }}
                               >
                                 <EditTwoToneIcon fontSize="small" />
                               </IconButton>
@@ -207,13 +215,13 @@ const GenreLists = (props: Props) => {
           </Card>
         </Grid>
       </Grid>
-      <EditGenreDialog
-        open={openEdit}
-        setOpen={setOpenEdit}
-        genre={genreEdit}
-      />
+      {/* <EditGenreDialog
+          open={openEdit}
+          setOpen={setOpenEdit}
+          genre={genreEdit}
+        /> */}
     </React.Fragment>
   );
 };
 
-export default GenreLists;
+export default AuthorLists;

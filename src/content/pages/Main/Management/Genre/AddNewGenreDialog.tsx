@@ -29,6 +29,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
+  reload: boolean;
+  setReload: (value: boolean) => void;
 }
 
 const AddNewGenreDialog = (props: Props) => {
@@ -47,6 +49,7 @@ const AddNewGenreDialog = (props: Props) => {
         setLoadingBtn(false);
         reset();
         props.setOpen(false);
+        props.setReload(!props.reload);
       });
   };
 

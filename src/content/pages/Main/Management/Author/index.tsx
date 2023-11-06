@@ -1,48 +1,43 @@
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabList, TabPanel } from '@mui/lab';
+import TabContext from '@mui/lab/TabContext';
 import { Box, Button, Grid, Tab, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import GenreLists from 'src/content/pages/Main/Management/Genre/GenreLists';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import useGenreApi from 'src/hooks/useGenreApi';
+import useAuthorApi from 'src/hooks/useAuthorApi';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import AddNewGenreDialog from './AddNewGenreDialog';
+import AuthorLists from './AuthorLists';
+import AddNewAuthorDialog from './AddNewAuthorDialog';
+import { MediaTabs } from 'src/types/enums/MediaTabs';
 
-enum Tabs {
-  ALL = 'all',
-  COMIC = 'comic',
-  MUSIC = 'music',
-  MOVIE = 'movie'
-}
-
-const ManageGenres = () => {
-  const { getGenreAll, getGenreComic, getGenreMovie, getGenreMusic } =
-    useGenreApi();
-  const [tabs, setTabs] = useState<string>(Tabs.ALL);
+const ManageAuthors = () => {
+  const { getAuthorAll, getAuthorComic, getAuthorMovie, getAuthorMusic } =
+    useAuthorApi();
+  const [tabs, setTabs] = useState<MediaTabs>(MediaTabs.ALL);
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(false);
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: string) => {
-    setTabs(newValue);
+    setTabs(newValue as MediaTabs);
   };
 
   useEffect(() => {
-    setTabs(Tabs.ALL);
+    setTabs(MediaTabs.ALL);
   }, [reload]);
 
   return (
-    <React.Fragment>
+    <>
       <Helmet>
-        <title>Quản lý thể loại | Zappy</title>
+        <title>Quản lý tác giả | Zappy</title>
       </Helmet>
       <PageTitleWrapper>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <Typography variant="h3" component="h3" gutterBottom>
-              Quản Lý Thể Loại
+              Quản Lý Tác Giả
             </Typography>
             <Typography variant="subtitle2">
-              Quản lý các thể loại của từng mục phim, truyện và nhạc.
+              Quản lý các tác giả của từng mục phim, truyện và nhạc.
             </Typography>
           </Grid>
           <Grid item>
@@ -52,9 +47,9 @@ const ManageGenres = () => {
               startIcon={<AddTwoToneIcon fontSize="small" />}
               onClick={() => setOpen(true)}
             >
-              Tạo thể loại mới
+              Thêm tác giả mới
             </Button>
-            <AddNewGenreDialog
+            <AddNewAuthorDialog
               reload={reload}
               setReload={setReload}
               open={open}
@@ -69,27 +64,27 @@ const ManageGenres = () => {
             onChange={handleChangeTabs}
             aria-label="lab API tabs example"
           >
-            <Tab label="Tất cả" value={Tabs.ALL} />
-            <Tab label="Truyện" value={Tabs.COMIC} />
-            <Tab label="Nhạc" value={Tabs.MUSIC} />
-            <Tab label="Phim" value={Tabs.MOVIE} />
+            <Tab label="Tất cả" value={MediaTabs.ALL} />
+            <Tab label="Truyện" value={MediaTabs.COMIC} />
+            <Tab label="Nhạc" value={MediaTabs.MUSIC} />
+            <Tab label="Phim" value={MediaTabs.MOVIE} />
           </TabList>
         </Box>
-        <TabPanel value={Tabs.ALL}>
-          <GenreLists reload={reload} api={getGenreAll} />
+        <TabPanel value={MediaTabs.ALL}>
+          <AuthorLists reload={reload} api={getAuthorAll} />
         </TabPanel>
-        <TabPanel value={Tabs.COMIC}>
-          <GenreLists reload={reload} api={getGenreComic} />
+        <TabPanel value={MediaTabs.COMIC}>
+          <AuthorLists reload={reload} api={getAuthorComic} />
         </TabPanel>
-        <TabPanel value={Tabs.MUSIC}>
-          <GenreLists reload={reload} api={getGenreMusic} />
+        <TabPanel value={MediaTabs.MUSIC}>
+          <AuthorLists reload={reload} api={getAuthorMusic} />
         </TabPanel>
-        <TabPanel value={Tabs.MOVIE}>
-          <GenreLists reload={reload} api={getGenreMovie} />
+        <TabPanel value={MediaTabs.MOVIE}>
+          <AuthorLists reload={reload} api={getAuthorMovie} />
         </TabPanel>
       </TabContext>
-    </React.Fragment>
+    </>
   );
 };
 
-export default ManageGenres;
+export default ManageAuthors;

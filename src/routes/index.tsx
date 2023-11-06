@@ -35,7 +35,7 @@ const ManageComic = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageComic'))
 );
 const ManageAuthors = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageAuthors'))
+  lazy(() => import('src/content/pages/Main/Management/Author'))
 );
 const ManageGenres = Loader(
   lazy(() => import('src/content/pages/Main/Management/Genre'))
