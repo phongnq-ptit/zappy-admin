@@ -18,35 +18,31 @@ import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Genre } from 'src/types/interfaces/Genre';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import {
-  ApiListResponse,
-  ListMetadata,
-  QueryParams,
-  defaultListMetadata
-} from 'src/types/interfaces/Base';
+import { ApiListResponse, QueryParams } from 'src/types/interfaces/Base';
 import TypeChip from '../../../../../components/Common/Media/TypeChip';
 import SkeletonGenre from './SkeletonGenre';
 import FilterMedia from './FilterMedia';
 import EditGenreDialog from './EditGenreDialog';
-import { TypeItem } from 'src/types/enums/TypeItem';
+import { useGenreStore } from './store';
 
 interface Props {
-  reload: boolean;
   api: (params: QueryParams) => Promise<ApiListResponse<Genre[]>>;
 }
 
 const GenreLists = (props: Props) => {
   const theme = useTheme();
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [listMetadata, setListMetadata] =
-    useState<ListMetadata>(defaultListMetadata);
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    limit: 10,
-    page: 1,
-    search: undefined
-  });
   const [loading, setLoading] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const {
+    reload,
+    genres,
+    onChangeGenres,
+    queryParams,
+    listMetadata,
+    onChangeListMetadata,
+    handleChangePage,
+    handleChangeRowsPerPage
+  } = useGenreStore();
   const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
 
   useEffect(() => {
@@ -54,39 +50,22 @@ const GenreLists = (props: Props) => {
     props
       .api(queryParams)
       .then((response) => {
-        setGenres(response.data.results);
-        setListMetadata(response.data.metadata);
+        onChangeGenres(response.data.results);
+        onChangeListMetadata(response.data.metadata);
       })
       .catch((e) => console.log(e))
       .finally(() =>
         setTimeout(() => {
           setLoading(false);
-        }, 750)
+        }, 500)
       );
-  }, [queryParams, props.reload]);
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setQueryParams({
-      ...queryParams,
-      limit: Number(event.target.value),
-      page: 1
-    });
-  };
-
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setQueryParams({ ...queryParams, page: newPage + 1 });
-  };
+  }, [queryParams, reload]);
 
   return (
     <React.Fragment>
       <Grid container spacing={2} flexDirection="column">
         <Grid item>
-          <FilterMedia query={queryParams} setQuery={setQueryParams} />
+          <FilterMedia />
         </Grid>
         <Grid item>
           <Card>
@@ -210,7 +189,7 @@ const GenreLists = (props: Props) => {
       <EditGenreDialog
         open={openEdit}
         setOpen={setOpenEdit}
-        genre={genreEdit}
+        genreEdit={genreEdit}
       />
     </React.Fragment>
   );

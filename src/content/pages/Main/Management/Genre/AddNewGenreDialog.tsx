@@ -7,7 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
 import FormInput from 'src/components/Input/FormInput';
 import { Controller, useForm } from 'react-hook-form';
 import { INewGenre } from 'src/types/interfaces/Genre';
@@ -16,6 +15,7 @@ import { TypeItem } from 'src/types/enums/TypeItem';
 import useGenreApi from 'src/hooks/useGenreApi';
 import { LoadingButton } from '@mui/lab';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
+import { EGenreTabs, useGenreStore } from './store';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -29,8 +29,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
-  reload: boolean;
-  setReload: (value: boolean) => void;
 }
 
 const AddNewGenreDialog = (props: Props) => {
@@ -38,18 +36,20 @@ const AddNewGenreDialog = (props: Props) => {
   const { handleSubmit, control, reset } = useForm();
   const { createGenre } = useGenreApi();
   const [loadingBtn, setLoadingBtn] = React.useState(false);
+  const { onChangeReload, tabs, onChangeTabs } = useGenreStore();
 
   const save = (data: INewGenre) => {
     setLoadingBtn(true);
     createGenre({ ...data })
       .then((response) => {
-        SuccessSnackbar('Tạo thể loại mới thành công! Vui lòng tải lại trang.');
+        SuccessSnackbar('Tạo thể loại mới thành công!');
       })
       .finally(() => {
         setLoadingBtn(false);
         reset();
         props.setOpen(false);
-        props.setReload(!props.reload);
+        if (data.type === Number(tabs)) onChangeReload();
+        else onChangeTabs(String(data.type) as EGenreTabs);
       });
   };
 

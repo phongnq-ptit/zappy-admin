@@ -1,14 +1,12 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import FormInput from 'src/components/Input/FormInput';
 import { Controller, useForm } from 'react-hook-form';
 import { Genre, INewGenre } from 'src/types/interfaces/Genre';
 import {
@@ -23,6 +21,9 @@ import { TypeItem } from 'src/types/enums/TypeItem';
 import useGenreApi from 'src/hooks/useGenreApi';
 import { LoadingButton } from '@mui/lab';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
+import { useTheme } from '@mui/material';
+import _ from 'lodash';
+import { useGenreStore } from './store';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -36,7 +37,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
-  genre: Genre;
+  genreEdit: Genre;
 }
 
 const EditGenreDialog = (props: Props) => {
@@ -44,12 +45,24 @@ const EditGenreDialog = (props: Props) => {
   const { handleSubmit, control, reset } = useForm();
   const { updateGenre } = useGenreApi();
   const [loadingBtn, setLoadingBtn] = React.useState(false);
+  const { genres, onChangeGenres } = useGenreStore();
+
+  React.useEffect(() => {
+    reset();
+  }, [props.genreEdit]);
 
   const save = (data: INewGenre) => {
     setLoadingBtn(true);
-    updateGenre(props.genre.id, { ...data })
+    updateGenre(props.genreEdit.id, { ...data })
       .then((response) => {
-        SuccessSnackbar('Cập thể loại thành công! Vui lòng tải lại trang.');
+        SuccessSnackbar('Cập thể loại thành công!');
+        onChangeGenres(
+          genres.map((item) =>
+            item.id === props.genreEdit.id
+              ? { ...props.genreEdit, ...data, updatedAt: new Date() }
+              : item
+          )
+        );
       })
       .finally(() => {
         setLoadingBtn(false);
@@ -57,10 +70,6 @@ const EditGenreDialog = (props: Props) => {
         props.setOpen(false);
       });
   };
-
-  React.useEffect(() => {
-    reset();
-  }, [props.genre]);
 
   const handleClose = () => {
     reset();
@@ -106,7 +115,7 @@ const EditGenreDialog = (props: Props) => {
               <Controller
                 name="name"
                 control={control}
-                defaultValue={props.genre.name}
+                defaultValue={props.genreEdit.name}
                 render={({
                   field: { onChange, value },
                   fieldState: { error }
@@ -129,7 +138,7 @@ const EditGenreDialog = (props: Props) => {
               <Controller
                 name="type"
                 control={control}
-                defaultValue={Number(props.genre.type)}
+                defaultValue={Number(props.genreEdit.type)}
                 rules={{ required: 'Trường này bắt buộc' }}
                 render={({
                   field: { onChange, value },

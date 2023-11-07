@@ -1,34 +1,23 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Grid, Tab, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import GenreLists from 'src/content/pages/Main/Management/Genre/GenreLists';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import useGenreApi from 'src/hooks/useGenreApi';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddNewGenreDialog from './AddNewGenreDialog';
-
-enum Tabs {
-  ALL = 'all',
-  COMIC = 'comic',
-  MUSIC = 'music',
-  MOVIE = 'movie'
-}
+import { EGenreTabs, useGenreStore } from './store';
 
 const ManageGenres = () => {
   const { getGenreAll, getGenreComic, getGenreMovie, getGenreMusic } =
     useGenreApi();
-  const [tabs, setTabs] = useState<string>(Tabs.ALL);
   const [open, setOpen] = useState(false);
-  const [reload, setReload] = useState(false);
+  const { tabs, onChangeTabs } = useGenreStore();
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: string) => {
-    setTabs(newValue);
+    onChangeTabs(newValue as EGenreTabs);
   };
-
-  useEffect(() => {
-    setTabs(Tabs.ALL);
-  }, [reload]);
 
   return (
     <React.Fragment>
@@ -54,12 +43,7 @@ const ManageGenres = () => {
             >
               Tạo thể loại mới
             </Button>
-            <AddNewGenreDialog
-              reload={reload}
-              setReload={setReload}
-              open={open}
-              setOpen={setOpen}
-            />
+            <AddNewGenreDialog open={open} setOpen={setOpen} />
           </Grid>
         </Grid>
       </PageTitleWrapper>
@@ -69,23 +53,23 @@ const ManageGenres = () => {
             onChange={handleChangeTabs}
             aria-label="lab API tabs example"
           >
-            <Tab label="Tất cả" value={Tabs.ALL} />
-            <Tab label="Truyện" value={Tabs.COMIC} />
-            <Tab label="Nhạc" value={Tabs.MUSIC} />
-            <Tab label="Phim" value={Tabs.MOVIE} />
+            <Tab label="Tất cả" value={EGenreTabs.ALL} />
+            <Tab label="Truyện" value={EGenreTabs.COMIC} />
+            <Tab label="Nhạc" value={EGenreTabs.MUSIC} />
+            <Tab label="Phim" value={EGenreTabs.MOVIE} />
           </TabList>
         </Box>
-        <TabPanel value={Tabs.ALL}>
-          <GenreLists reload={reload} api={getGenreAll} />
+        <TabPanel value={EGenreTabs.ALL}>
+          <GenreLists api={getGenreAll} />
         </TabPanel>
-        <TabPanel value={Tabs.COMIC}>
-          <GenreLists reload={reload} api={getGenreComic} />
+        <TabPanel value={EGenreTabs.COMIC}>
+          <GenreLists api={getGenreComic} />
         </TabPanel>
-        <TabPanel value={Tabs.MUSIC}>
-          <GenreLists reload={reload} api={getGenreMusic} />
+        <TabPanel value={EGenreTabs.MUSIC}>
+          <GenreLists api={getGenreMusic} />
         </TabPanel>
-        <TabPanel value={Tabs.MOVIE}>
-          <GenreLists reload={reload} api={getGenreMovie} />
+        <TabPanel value={EGenreTabs.MOVIE}>
+          <GenreLists api={getGenreMovie} />
         </TabPanel>
       </TabContext>
     </React.Fragment>
