@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { useGenreStore } from './store';
 
 const FilterGenre = () => {
-  const { queryParams, onChangeQueryParams } = useGenreStore();
+  const { queryParams, onChangeQueryParams, skeletonLoading } = useGenreStore();
   const [searchStr, setSearchStr] = useState<string>(
     queryParams.search === undefined ? '' : queryParams.search
   );
@@ -55,6 +55,7 @@ const FilterGenre = () => {
                       aria-label="toggle password visibility"
                       onClick={handleClear}
                       edge="end"
+                      disabled={skeletonLoading}
                       size="small"
                     >
                       <ClearTwoToneIcon />
@@ -66,6 +67,7 @@ const FilterGenre = () => {
                     aria-label="toggle password visibility"
                     onClick={handleSearch}
                     edge="end"
+                    disabled={skeletonLoading}
                     size="medium"
                   >
                     <SearchIcon />

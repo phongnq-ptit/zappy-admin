@@ -14,5 +14,5 @@ export interface INewAuthor {
   name: string;
   description: string;
   type: TypeItem;
-  image?: FormData;
+  image?: File;
 }

@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { Author } from 'src/types/interfaces/Author';
 import {
   ListMetadata,
   QueryParams,
   defaultListMetadata
 } from 'src/types/interfaces/Base';
-import { Genre } from 'src/types/interfaces/Genre';
 import { useBetween } from 'use-between';
 
-export enum EGenreTabs {
+export enum EAuthorTabs {
   ALL = '-1',
   COMIC = '0',
   MUSIC = '1',
@@ -15,8 +15,8 @@ export enum EGenreTabs {
 }
 
 function init() {
-  const [tabs, setTabs] = useState<EGenreTabs>(EGenreTabs.ALL);
-  const onChangeTabs = useCallback((value: EGenreTabs) => setTabs(value), []);
+  const [tabs, setTabs] = useState<EAuthorTabs>(EAuthorTabs.ALL);
+  const onChangeTabs = useCallback((value: EAuthorTabs) => setTabs(value), []);
 
   const [listMetadata, setListMetadata] =
     useState<ListMetadata>(defaultListMetadata);
@@ -35,11 +35,14 @@ function init() {
     []
   );
 
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const onChangeGenres = useCallback((value: Genre[]) => setGenres(value), []);
-
   const [reload, setReload] = useState<boolean>(false);
   const onChangeReload = useCallback(() => setReload(!reload), []);
+
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const onChangeAuthors = useCallback(
+    (value: Author[]) => setAuthors(value),
+    []
+  );
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -71,15 +74,15 @@ function init() {
     onChangeListMetadata,
     queryParams,
     onChangeQueryParams,
-    genres,
-    onChangeGenres,
     handleChangeRowsPerPage,
     handleChangePage,
     reload,
     onChangeReload,
+    authors,
+    onChangeAuthors,
     skeletonLoading,
     onChangeSkeletonLoading
   };
 }
 
-export const useGenreStore = () => useBetween(init);
+export const useAuthorStore = () => useBetween(init);

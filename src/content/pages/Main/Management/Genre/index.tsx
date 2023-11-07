@@ -13,7 +13,7 @@ const ManageGenres = () => {
   const { getGenreAll, getGenreComic, getGenreMovie, getGenreMusic } =
     useGenreApi();
   const [open, setOpen] = useState(false);
-  const { tabs, onChangeTabs } = useGenreStore();
+  const { tabs, onChangeTabs, skeletonLoading } = useGenreStore();
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: string) => {
     onChangeTabs(newValue as EGenreTabs);
@@ -53,10 +53,26 @@ const ManageGenres = () => {
             onChange={handleChangeTabs}
             aria-label="lab API tabs example"
           >
-            <Tab label="Tất cả" value={EGenreTabs.ALL} />
-            <Tab label="Truyện" value={EGenreTabs.COMIC} />
-            <Tab label="Nhạc" value={EGenreTabs.MUSIC} />
-            <Tab label="Phim" value={EGenreTabs.MOVIE} />
+            <Tab
+              label="Tất cả"
+              disabled={skeletonLoading}
+              value={EGenreTabs.ALL}
+            />
+            <Tab
+              label="Truyện"
+              disabled={skeletonLoading}
+              value={EGenreTabs.COMIC}
+            />
+            <Tab
+              label="Nhạc"
+              disabled={skeletonLoading}
+              value={EGenreTabs.MUSIC}
+            />
+            <Tab
+              label="Phim"
+              disabled={skeletonLoading}
+              value={EGenreTabs.MOVIE}
+            />
           </TabList>
         </Box>
         <TabPanel value={EGenreTabs.ALL}>

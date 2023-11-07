@@ -26,6 +26,7 @@ import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadImage from 'src/components/UploadFile/UploadImage';
 import { MediaTabs } from 'src/types/enums/MediaTabs';
+import { EAuthorTabs, useAuthorStore } from './store';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -39,8 +40,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
-  reload: boolean;
-  setReload: (value: boolean) => void;
 }
 
 const AddNewAuthorDialog = (props: Props) => {
@@ -49,19 +48,24 @@ const AddNewAuthorDialog = (props: Props) => {
   const { createAuthor } = useAuthorApi();
   const [loadingBtn, setLoadingBtn] = React.useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
+  const { onChangeReload, tabs, onChangeTabs } = useAuthorStore();
 
   const save = (data: INewAuthor) => {
     setLoadingBtn(true);
 
+    if (image) data.image = image;
+
     createAuthor(data)
       .then((response) => {
-        SuccessSnackbar('Tạo thể loại mới thành công! Vui lòng tải lại trang.');
+        SuccessSnackbar('Tạo thể loại mới thành công!');
       })
       .finally(() => {
         setLoadingBtn(false);
         reset();
+        setImage(undefined);
         props.setOpen(false);
-        props.setReload(!props.reload);
+        if (data.type === Number(tabs)) onChangeReload();
+        else onChangeTabs(String(data.type) as EAuthorTabs);
       });
   };
 

@@ -8,22 +8,17 @@ import useAuthorApi from 'src/hooks/useAuthorApi';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AuthorLists from './AuthorLists';
 import AddNewAuthorDialog from './AddNewAuthorDialog';
-import { MediaTabs } from 'src/types/enums/MediaTabs';
+import { EAuthorTabs, useAuthorStore } from './store';
 
 const ManageAuthors = () => {
   const { getAuthorAll, getAuthorComic, getAuthorMovie, getAuthorMusic } =
     useAuthorApi();
-  const [tabs, setTabs] = useState<MediaTabs>(MediaTabs.ALL);
+  const { tabs, onChangeTabs, skeletonLoading } = useAuthorStore();
   const [open, setOpen] = useState(false);
-  const [reload, setReload] = useState(false);
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: string) => {
-    setTabs(newValue as MediaTabs);
+    onChangeTabs(newValue as EAuthorTabs);
   };
-
-  useEffect(() => {
-    setTabs(MediaTabs.ALL);
-  }, [reload]);
 
   return (
     <>
@@ -49,12 +44,7 @@ const ManageAuthors = () => {
             >
               Thêm tác giả mới
             </Button>
-            <AddNewAuthorDialog
-              reload={reload}
-              setReload={setReload}
-              open={open}
-              setOpen={setOpen}
-            />
+            <AddNewAuthorDialog open={open} setOpen={setOpen} />
           </Grid>
         </Grid>
       </PageTitleWrapper>
@@ -64,23 +54,39 @@ const ManageAuthors = () => {
             onChange={handleChangeTabs}
             aria-label="lab API tabs example"
           >
-            <Tab label="Tất cả" value={MediaTabs.ALL} />
-            <Tab label="Truyện" value={MediaTabs.COMIC} />
-            <Tab label="Nhạc" value={MediaTabs.MUSIC} />
-            <Tab label="Phim" value={MediaTabs.MOVIE} />
+            <Tab
+              label="Tất cả"
+              disabled={skeletonLoading}
+              value={EAuthorTabs.ALL}
+            />
+            <Tab
+              label="Truyện"
+              disabled={skeletonLoading}
+              value={EAuthorTabs.COMIC}
+            />
+            <Tab
+              label="Nhạc"
+              disabled={skeletonLoading}
+              value={EAuthorTabs.MUSIC}
+            />
+            <Tab
+              label="Phim"
+              disabled={skeletonLoading}
+              value={EAuthorTabs.MOVIE}
+            />
           </TabList>
         </Box>
-        <TabPanel value={MediaTabs.ALL}>
-          <AuthorLists reload={reload} api={getAuthorAll} />
+        <TabPanel value={EAuthorTabs.ALL}>
+          <AuthorLists api={getAuthorAll} />
         </TabPanel>
-        <TabPanel value={MediaTabs.COMIC}>
-          <AuthorLists reload={reload} api={getAuthorComic} />
+        <TabPanel value={EAuthorTabs.COMIC}>
+          <AuthorLists api={getAuthorComic} />
         </TabPanel>
-        <TabPanel value={MediaTabs.MUSIC}>
-          <AuthorLists reload={reload} api={getAuthorMusic} />
+        <TabPanel value={EAuthorTabs.MUSIC}>
+          <AuthorLists api={getAuthorMusic} />
         </TabPanel>
-        <TabPanel value={MediaTabs.MOVIE}>
-          <AuthorLists reload={reload} api={getAuthorMovie} />
+        <TabPanel value={EAuthorTabs.MOVIE}>
+          <AuthorLists api={getAuthorMovie} />
         </TabPanel>
       </TabContext>
     </>

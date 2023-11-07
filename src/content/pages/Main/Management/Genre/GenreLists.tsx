@@ -31,7 +31,6 @@ interface Props {
 
 const GenreLists = (props: Props) => {
   const theme = useTheme();
-  const [loading, setLoading] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const {
     reload,
@@ -41,12 +40,14 @@ const GenreLists = (props: Props) => {
     listMetadata,
     onChangeListMetadata,
     handleChangePage,
-    handleChangeRowsPerPage
+    handleChangeRowsPerPage,
+    skeletonLoading,
+    onChangeSkeletonLoading
   } = useGenreStore();
   const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
 
   useEffect(() => {
-    setLoading(true);
+    onChangeSkeletonLoading(true);
     props
       .api(queryParams)
       .then((response) => {
@@ -56,7 +57,7 @@ const GenreLists = (props: Props) => {
       .catch((e) => console.log(e))
       .finally(() =>
         setTimeout(() => {
-          setLoading(false);
+          onChangeSkeletonLoading(false);
         }, 500)
       );
   }, [queryParams, reload]);
@@ -82,7 +83,7 @@ const GenreLists = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {loading ? (
+                  {skeletonLoading ? (
                     <SkeletonGenre />
                   ) : (
                     genres.map((genre, index) => {

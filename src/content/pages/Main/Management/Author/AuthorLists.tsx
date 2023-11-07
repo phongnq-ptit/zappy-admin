@@ -18,75 +18,55 @@ import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import TypeChip from 'src/components/Common/Media/TypeChip';
 import { Author } from 'src/types/interfaces/Author';
-import {
-  ApiListResponse,
-  ListMetadata,
-  QueryParams,
-  defaultListMetadata
-} from 'src/types/interfaces/Base';
+import { ApiListResponse, QueryParams } from 'src/types/interfaces/Base';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import SkeletonAuthors from './SkeletonAuthors';
 import FilterAuthor from './FilterAuthor';
 import TextTruncate from 'react-text-truncate';
-import { MediaTabs } from 'src/types/enums/MediaTabs';
+import { useAuthorStore } from './store';
 
 interface Props {
-  reload: boolean;
   api: (params: QueryParams) => Promise<ApiListResponse<Author[]>>;
 }
 
 const AuthorLists = (props: Props) => {
   const theme = useTheme();
-  const [authors, setAuthors] = useState<Author[]>([]);
-  const [listMetadata, setListMetadata] =
-    useState<ListMetadata>(defaultListMetadata);
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    limit: 10,
-    page: 1,
-    search: undefined
-  });
-  const [loading, setLoading] = useState(false);
+  const {
+    authors,
+    onChangeAuthors,
+    listMetadata,
+    onChangeListMetadata,
+    queryParams,
+    reload,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    skeletonLoading,
+    onChangeSkeletonLoading
+  } = useAuthorStore();
   const [openEdit, setOpenEdit] = useState(false);
   // const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
 
   useEffect(() => {
-    setLoading(true);
+    onChangeSkeletonLoading(true);
     props
       .api(queryParams)
       .then((response) => {
-        setAuthors(response.data.results);
-        setListMetadata(response.data.metadata);
+        onChangeAuthors(response.data.results);
+        onChangeListMetadata(response.data.metadata);
       })
       .catch((e) => console.log(e))
       .finally(() =>
         setTimeout(() => {
-          setLoading(false);
+          onChangeSkeletonLoading(false);
         }, 750)
       );
-  }, [queryParams, props.reload]);
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setQueryParams({
-      ...queryParams,
-      limit: Number(event.target.value),
-      page: 1
-    });
-  };
-
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setQueryParams({ ...queryParams, page: newPage + 1 });
-  };
+  }, [queryParams, reload]);
 
   return (
     <React.Fragment>
       <Grid container spacing={2} flexDirection="column">
         <Grid item>
-          <FilterAuthor query={queryParams} setQuery={setQueryParams} />
+          <FilterAuthor />
         </Grid>
         <Grid item>
           <Card>
@@ -105,7 +85,7 @@ const AuthorLists = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {loading ? (
+                  {skeletonLoading ? (
                     <SkeletonAuthors />
                   ) : (
                     authors.map((author, index) => {
