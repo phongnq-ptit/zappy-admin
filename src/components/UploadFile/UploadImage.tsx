@@ -8,6 +8,7 @@ interface Props {
   setFileUpload: Function;
   notShowDelete?: boolean;
   height?: string;
+  urlImage?: string;
 }
 
 const UploadImage = (props: Props) => {
@@ -41,7 +42,7 @@ const UploadImage = (props: Props) => {
   };
 
   const styleUpload = {
-    display: props.fileUpload ? 'block' : 'none'
+    display: props.fileUpload || props.urlImage ? 'block' : 'none'
   };
 
   return (
@@ -65,9 +66,13 @@ const UploadImage = (props: Props) => {
         />
         <div id="file_img" style={styleUpload}>
           <img
-            src={URL.createObjectURL(
-              props.fileUpload ? props.fileUpload : new Blob()
-            )}
+            src={
+              props.urlImage
+                ? props.urlImage
+                : URL.createObjectURL(
+                    props.fileUpload ? props.fileUpload : new Blob()
+                  )
+            }
             alt=""
           />
           {props.notShowDelete ? null : <div onClick={handleDestroy}>X</div>}

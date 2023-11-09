@@ -24,6 +24,7 @@ import SkeletonAuthors from './SkeletonAuthors';
 import FilterAuthor from './FilterAuthor';
 import TextTruncate from 'react-text-truncate';
 import { useAuthorStore } from './store';
+import EditAuthorDialog from './EditAuthorDialog';
 
 interface Props {
   api: (params: QueryParams) => Promise<ApiListResponse<Author[]>>;
@@ -44,7 +45,7 @@ const AuthorLists = (props: Props) => {
     onChangeSkeletonLoading
   } = useAuthorStore();
   const [openEdit, setOpenEdit] = useState(false);
-  // const [genreEdit, setGenreEdit] = useState<Genre>({} as Genre);
+  const [authorEdit, setAuthorEdit] = useState<Author>({} as Author);
 
   useEffect(() => {
     onChangeSkeletonLoading(true);
@@ -161,10 +162,10 @@ const AuthorLists = (props: Props) => {
                                 }}
                                 color="inherit"
                                 size="small"
-                                //   onClick={() => {
-                                //     setGenreEdit(genre);
-                                //     setOpenEdit(true);
-                                //   }}
+                                onClick={() => {
+                                  setAuthorEdit(author);
+                                  setOpenEdit(true);
+                                }}
                               >
                                 <EditTwoToneIcon fontSize="small" />
                               </IconButton>
@@ -195,11 +196,11 @@ const AuthorLists = (props: Props) => {
           </Card>
         </Grid>
       </Grid>
-      {/* <EditGenreDialog
-          open={openEdit}
-          setOpen={setOpenEdit}
-          genre={genreEdit}
-        /> */}
+      <EditAuthorDialog
+        open={openEdit}
+        setOpen={setOpenEdit}
+        authorEdit={authorEdit}
+      />
     </React.Fragment>
   );
 };

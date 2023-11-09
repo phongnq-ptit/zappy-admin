@@ -24,6 +24,7 @@ import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 import { useTheme } from '@mui/material';
 import _ from 'lodash';
 import { useGenreStore } from './store';
+import { getDiff } from 'src/utils/Helper';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -53,7 +54,7 @@ const EditGenreDialog = (props: Props) => {
 
   const save = (data: INewGenre) => {
     setLoadingBtn(true);
-    updateGenre(props.genreEdit.id, { ...data })
+    updateGenre(props.genreEdit.id, getDiff({ ...data }, props.genreEdit))
       .then((response) => {
         SuccessSnackbar('Cập thể loại thành công!');
         onChangeGenres(
