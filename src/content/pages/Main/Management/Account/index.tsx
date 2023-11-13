@@ -4,8 +4,11 @@ import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AccountLists from './AccountLists';
+import { useNavigate } from 'react-router';
+import { Pathname } from 'src/routes/path';
 
 const ManageAccount = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Helmet>
@@ -26,6 +29,9 @@ const ManageAccount = () => {
               sx={{ mt: { xs: 2, md: 0 } }}
               variant="contained"
               startIcon={<AddTwoToneIcon fontSize="small" />}
+              onClick={() => {
+                navigate(`/${Pathname.users}/add`);
+              }}
             >
               Tạo tài khoản mới
             </Button>

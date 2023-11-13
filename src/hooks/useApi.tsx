@@ -7,6 +7,8 @@ interface IToken {
   refreshToken: string;
 }
 
+const IGNORE_ERRORS = ['user_not_found'];
+
 export default function useApi() {
   const login = localStorage.getItem('login');
   const token: IToken = login
@@ -24,7 +26,10 @@ export default function useApi() {
         return response.data;
       },
       (error) => {
-        setGError({ isError: true, message: error.response.data.message });
+        console.log(error);
+
+        if (!IGNORE_ERRORS.includes(error.response.data.errorCode))
+          setGError({ isError: true, message: error.response.data.message });
         return Promise.reject(error);
       }
     );

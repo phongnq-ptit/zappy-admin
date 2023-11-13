@@ -15,7 +15,11 @@ const MainContent = styled(Box)(
 `
 );
 
-function Status404() {
+interface Props {
+  url?: string;
+}
+
+function Status404(props: Props) {
   return (
     <>
       <Helmet>
@@ -31,7 +35,7 @@ function Status404() {
           </Box>
           <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', mt: 3, p: 4 }}>
-              <Button href="/" variant="outlined">
+              <Button href={props.url || '/'} variant="outlined">
                 QUAY LẠI TRANG CHÍNH
               </Button>
             </Box>

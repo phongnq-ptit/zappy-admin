@@ -26,6 +26,7 @@
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.8.1",
+    "qs": "^6.11.2",
     "react": "17.0.2",
     "react-apexcharts": "1.4.0",
     "react-custom-scrollbars-2": "4.4.0",

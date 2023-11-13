@@ -17,9 +17,10 @@ export interface User {
   isActive: boolean;
   role: UserRole;
   provider: number;
-  profiles?: Pick<Profile, 'id' | 'avatar' | 'nickname'>[];
-  accessToken: string;
-  refreshToken: string;
+  profiles?: Profile[];
+  profilesCount?: number;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface Profile {
@@ -47,3 +48,8 @@ export const generateDefauleUser = () =>
     role: UserRole.ADMIN,
     provider: 1
   } as User);
+
+export type IUpdateUser = Pick<
+  User,
+  'username' | 'address' | 'isActive' | 'phone'
+>;

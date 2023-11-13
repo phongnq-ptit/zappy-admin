@@ -22,6 +22,10 @@ const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
 const ManageAccount = Loader(
   lazy(() => import('src/content/pages/Main/Management/Account'))
 );
+const AddNewAccount = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Account/AddNewAccount'))
+);
+
 const AccountDetail = Loader(
   lazy(() => import('src/content/pages/Main/Management/Account/AccountDetail'))
 );
@@ -98,6 +102,7 @@ const routes: RouteObject[] = [
         path: `${Pathname.users}/:userId`,
         element: <AccountDetail />
       },
+      { path: `${Pathname.users}/add`, element: <AddNewAccount /> },
       {
         path: Pathname.comics,
         element: <ManageComic />
