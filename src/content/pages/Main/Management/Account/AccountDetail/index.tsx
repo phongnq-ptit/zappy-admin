@@ -11,7 +11,7 @@ import { Pathname } from 'src/routes/path';
 import SkeletonAccDetail from './SkeletonAccDetail';
 import Summary from './Summary';
 import EditAccount from './EditAccount';
-import ManageProfile from './ManageProfile';
+import ManageProfile from './Profile/ManageProfile';
 
 const AccountDetail = () => {
   const params = useParams();

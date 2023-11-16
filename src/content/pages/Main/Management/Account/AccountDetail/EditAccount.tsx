@@ -18,7 +18,6 @@ import { LoadingButton } from '@mui/lab';
 import useUserApi from 'src/hooks/useUserApi';
 import { IUpdateUser } from 'src/types/interfaces/User';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
-import { EAccountTabs, useAccountDetail } from './store';
 
 const useStyles = makeStyles({
   title: {
@@ -52,13 +51,16 @@ const EditAccount = () => {
         onChangeAccount({ ...account, ...data });
       })
       .finally(() => {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+          reset();
+        }, 750);
       });
   };
 
   useEffect(() => {
     reset();
-  }, [account]);
+  }, []);
 
   return (
     <Paper sx={{ mt: 2 }}>

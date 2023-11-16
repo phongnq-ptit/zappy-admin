@@ -35,6 +35,13 @@ export interface Profile {
   isLocked: boolean;
 }
 
+export interface IUpdateProfile {
+  nickname: string;
+  birthday: Date;
+  avatar: File;
+  isLocked: boolean;
+}
+
 export const generateDefauleUser = () =>
   ({
     id: 0,

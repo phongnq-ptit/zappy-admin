@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import _ from 'lodash';
 
 export function convertFormData(data: Object) {
@@ -18,3 +19,11 @@ export function getAge(birthday: Date) {
   var ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
+
+export const formatDateTime = (time: Date) => {
+  return format(new Date(time), 'HH:mm, dd/MM/yyy');
+};
+
+export const formatDate = (time: Date) => {
+  return format(new Date(time), 'dd/MM/yyy');
+};

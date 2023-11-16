@@ -7,7 +7,7 @@ interface Props {
   fileUpload: File | undefined;
   setFileUpload: Function;
   notShowDelete?: boolean;
-  height?: string;
+  style?: Record<string, string>;
   urlImage?: string;
 }
 
@@ -50,11 +50,12 @@ const UploadImage = (props: Props) => {
       <Box
         sx={{
           maxWidth: '450px',
-          height: props.height ? props.height : '300px',
+          height: '300px',
           width: '100%',
           border: '1px solid #ddd',
           padding: '15px',
-          position: 'relative'
+          position: 'relative',
+          ...props.style
         }}
       >
         <input
@@ -75,7 +76,7 @@ const UploadImage = (props: Props) => {
             }
             alt=""
           />
-          {props.notShowDelete ? null : <div onClick={handleDestroy}>X</div>}
+          {!props.notShowDelete && <div onClick={handleDestroy}>X</div>}
         </div>
       </Box>
     </Box>
