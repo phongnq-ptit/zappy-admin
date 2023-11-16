@@ -57,9 +57,12 @@ export default function useApi() {
     return api.patch(url, body, { params: params });
   }
 
-  async function DELETE<T>(url: string, params?: any): Promise<T> {
+  async function DELETE<T>(
+    url: string,
+    query: { data?: any; params?: any }
+  ): Promise<T> {
     const api = await AXIOS();
-    return api.delete(url, { params: params });
+    return api.delete(url, query);
   }
 
   const getConfig = () => {

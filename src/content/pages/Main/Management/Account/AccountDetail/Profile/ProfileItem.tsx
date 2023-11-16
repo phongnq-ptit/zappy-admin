@@ -4,16 +4,14 @@ import {
   AccordionDetails,
   AccordionSummary,
   Avatar,
-  Box,
   Button,
   Checkbox,
   FormControl,
   FormControlLabel,
   Grid,
-  Input,
+  IconButton,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   TextFieldProps,
@@ -23,18 +21,22 @@ import React, { useEffect, useState } from 'react';
 import { IUpdateProfile, Profile } from 'src/types/interfaces/User';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { makeStyles } from '@mui/styles';
 import { formatDate, getAge } from 'src/utils/Helper';
 import Label from 'src/components/Label';
 import { Controller, useForm } from 'react-hook-form';
 import UploadImage from 'src/components/UploadFile/UploadImage';
-import { DatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { DatePicker, LoadingButton } from '@mui/lab';
 import useProfileApi from 'src/hooks/useProfileApi';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 import { useAccountDetail } from '../store';
 import { format } from 'date-fns';
 import { useAccountStore } from '../../store';
+import DeleteProfileDialog from './DeleteProfileDialog';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 const useStyles = makeStyles({
   avatar: {
@@ -66,6 +68,10 @@ const ProfileItem = (props: Props) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const { deleteProfile } = useProfileApi();
+  const { profiles, onChangeProfiles } = useAccountDetail();
+  const { account, onChangeAccount } = useAccountStore();
 
   const handleChangeAccordition = (
     event: React.SyntheticEvent,
@@ -74,62 +80,105 @@ const ProfileItem = (props: Props) => {
     setExpanded(newExpanded);
   };
 
+  const handleDelete = () => {
+    setLoading(true);
+    deleteProfile([props.profile.id])
+      .then((response) => {
+        SuccessSnackbar('Xóa hồ sơ thành công!');
+        const newProfiles = profiles.filter(
+          (item) => item.id !== props.profile.id
+        );
+        onChangeProfiles(newProfiles);
+        onChangeAccount({ ...account, profiles: newProfiles });
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+          setIsDelete(false);
+        }, 750);
+      });
+  };
+
   return (
-    <Accordion expanded={expanded} onChange={handleChangeAccordition}>
-      <AccordionSummary
-        expandIcon={expanded ? <UnfoldLessIcon /> : <UnfoldMoreIcon />}
-        aria-controls="panel1bh-content"
-        sx={{
-          borderBottom: expanded && '1px solid rgba(0,0,0,0.1)',
-          borderRadius: '5px 5px 0px 0px'
-        }}
-      >
-        <Typography
-          variant="h4"
+    <React.Fragment>
+      <Accordion expanded={expanded} onChange={handleChangeAccordition}>
+        <AccordionSummary
+          expandIcon={expanded ? <UnfoldLessIcon /> : <UnfoldMoreIcon />}
+          aria-controls="panel1bh-content"
           sx={{
-            textTransform: 'capitalize',
-            px: 1
+            borderBottom: expanded && '1px solid rgba(0,0,0,0.1)',
+            borderRadius: '5px 5px 0px 0px'
           }}
         >
-          {`Hồ sơ: ${props.profile.nickname}`}
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        {edit ? (
-          <Edit
-            profile={props.profile}
-            setLoadingBtn={setLoading}
-            setEdit={setEdit}
-          />
-        ) : (
-          <Info profile={props.profile} />
-        )}
-      </AccordionDetails>
-      <AccordionActions>
-        {edit && (
-          <LoadingButton
-            loading={loading}
-            type="submit"
-            form={`edit-profile-${props.profile.id}`}
-            variant="outlined"
-            color={loading ? 'secondary' : 'primary'}
-            autoFocus
-            sx={{ mb: 1 }}
+          <Typography
+            variant="h4"
+            sx={{
+              textTransform: 'capitalize',
+              px: 1
+            }}
           >
-            <span>Lưu Thay Đổi</span>
-          </LoadingButton>
-        )}
-        <Button
-          variant="outlined"
-          color={edit ? 'error' : 'secondary'}
-          sx={{ mx: 2, mb: 1 }}
-          onClick={() => setEdit(!edit)}
-          disabled={loading}
-        >
-          {edit ? 'Hủy chỉnh sửa' : 'Chỉnh sửa hồ sơ'}
-        </Button>
-      </AccordionActions>
-    </Accordion>
+            {`Hồ sơ: ${props.profile.nickname}`}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {edit ? (
+            <Edit
+              profile={props.profile}
+              setLoadingBtn={setLoading}
+              setEdit={setEdit}
+            />
+          ) : (
+            <Info profile={props.profile} />
+          )}
+        </AccordionDetails>
+        <AccordionActions>
+          {edit && (
+            <LoadingButton
+              loading={loading}
+              type="submit"
+              form={`edit-profile-${props.profile.id}`}
+              variant="outlined"
+              color={loading ? 'secondary' : 'primary'}
+              autoFocus
+              sx={{ mb: 1 }}
+              startIcon={<SaveOutlinedIcon />}
+            >
+              <span>Lưu Thay Đổi</span>
+            </LoadingButton>
+          )}
+          <Button
+            variant="outlined"
+            color={edit ? 'inherit' : 'secondary'}
+            startIcon={
+              edit ? <CloseOutlinedIcon /> : <ModeEditOutlineOutlinedIcon />
+            }
+            sx={{ mb: 1 }}
+            onClick={() => setEdit(!edit)}
+            disabled={loading}
+          >
+            {edit ? 'Hủy chỉnh sửa' : 'Chỉnh sửa hồ sơ'}
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ mx: 2, mb: 1 }}
+            onClick={() => setIsDelete(true)}
+            disabled={loading}
+            startIcon={<DeleteOutlineOutlinedIcon />}
+          >
+            Xóa Hồ Sơ
+          </Button>
+        </AccordionActions>
+      </Accordion>
+      {isDelete && (
+        <DeleteProfileDialog
+          open={isDelete}
+          setOpen={setIsDelete}
+          loading={loading}
+          onAction={handleDelete}
+        />
+      )}
+    </React.Fragment>
   );
 };
 
@@ -248,7 +297,7 @@ const Edit = ({
   };
 
   return (
-    <Grid container spacing={2} px={1} py={2}>
+    <Grid container spacing={2} px={1} pt={2}>
       <Grid item xs={12}>
         <form id={`edit-profile-${profile.id}`} onSubmit={handleSubmit(save)}>
           <Grid container spacing={2} alignItems="center">

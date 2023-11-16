@@ -5,7 +5,7 @@ import { IUpdateProfile, Profile } from 'src/types/interfaces/User';
 import { convertFormData } from 'src/utils/Helper';
 
 const useProfileApi = () => {
-  const { GET, POST, PATCH } = useApi();
+  const { GET, POST, PATCH, DELETE } = useApi();
   const baseUrl = '/profile';
 
   async function getProfileListsByUserId(
@@ -24,9 +24,16 @@ const useProfileApi = () => {
     );
   }
 
+  async function deleteProfile(
+    ids: number[]
+  ): Promise<ApiSingleResponse<Profile>> {
+    return DELETE<ApiSingleResponse<Profile>>(baseUrl, { data: { ids } });
+  }
+
   return {
     getProfileListsByUserId,
-    updateProfile
+    updateProfile,
+    deleteProfile
   };
 };
 
