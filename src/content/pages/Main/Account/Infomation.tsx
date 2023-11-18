@@ -1,24 +1,38 @@
 import { LoadingButton } from '@mui/lab';
 import {
+  Alert,
   Avatar,
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControl,
   FormHelperText,
   Grid,
+  IconButton,
   InputLabel,
+  LinearProgress,
+  Link,
   MenuItem,
   Paper,
   Select,
-  TextField
+  TextField,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Controller, useForm } from 'react-hook-form';
+import { BootstrapDialog } from 'src/components/Dialog/BootstapDialog';
 import { GlobalContext } from 'src/contexts/GlobalContext';
 import useUserApi from 'src/hooks/useUserApi';
-import { IUpdateUser } from 'src/types/interfaces/User';
+import { IUpdateUser, User } from 'src/types/interfaces/User';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import Label from 'src/components/Label';
 
 const useStyles = makeStyles({
   title: {
@@ -33,6 +47,14 @@ const useStyles = makeStyles({
     fontSize: '0.76rem',
     fontWeight: 500,
     color: 'rgba(0,0,0,0.4)'
+  },
+  titleColor: {
+    color: 'rgba(0,0,0,0.5)',
+    textTransform: 'capitalize',
+    marginBottom: '4px !important'
+  },
+  fontS1: {
+    fontSize: '1rem'
   }
 });
 
@@ -42,6 +64,7 @@ const Infomation = () => {
   const { updateUser } = useUserApi();
   const { handleSubmit, control, reset } = useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     reset();
@@ -252,7 +275,187 @@ const Infomation = () => {
           </Grid>
         </Grid>
       </Paper>
+      <Link
+        onClick={() => setOpen(true)}
+        sx={{
+          float: 'right',
+          px: 3,
+          mt: 2,
+          textDecoration: 'underline',
+          cursor: 'pointer'
+        }}
+      >
+        Danh Sách Quản Trị Viên
+      </Link>
+      {open && <AdminListsDialog open={open} setOpen={setOpen} />}
     </>
+  );
+};
+
+const AdminListsDialog = ({
+  open,
+  setOpen
+}: {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}) => {
+  const theme = useTheme();
+  const classes = useStyles();
+  const { getAllUser } = useUserApi();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const filter = JSON.stringify({ role: 'admin' });
+    setLoading(true);
+    getAllUser({ filter })
+      .then((response) => {
+        setUsers(response.data.results);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <BootstrapDialog
+      onClose={handleClose}
+      aria-labelledby="customized-dialog-title"
+      open={open}
+      maxWidth="md"
+      fullWidth={true}
+    >
+      <DialogTitle
+        sx={{
+          m: 0,
+          p: 2,
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: theme.colors.secondary.dark
+        }}
+        id="customized-dialog-title"
+      >
+        Danh Sách Tài Khoản Admin
+      </DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        sx={{
+          position: 'absolute',
+          right: 9,
+          top: 9,
+          color: (theme) => theme.palette.grey[500]
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <DialogContent dividers>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Alert severity="info">
+              Để thêm quản trị viên mới vào hệ thống, vui lòng liên hệ với nhóm
+              phát triển trang quản trị!
+            </Alert>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                sx={{ borderBottom: '1px solid rgba(0,0,0,0.2)', pb: 1 }}
+              >
+                <Grid container>
+                  <Grid item xs={3}>
+                    <Typography variant="h5" className={classes.titleColor}>
+                      Tên quản trị viên:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h5" className={classes.titleColor}>
+                      Email:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h5" className={classes.titleColor}>
+                      Số điện thoại:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h5" className={classes.titleColor}>
+                      Trạng thái tài khoản:
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              {loading ? (
+                <Box sx={{ width: '100%' }}>
+                  <LinearProgress />
+                </Box>
+              ) : (
+                <React.Fragment>
+                  {users.map((user) => (
+                    <Grid item xs={12} key={user.id}>
+                      <Grid container>
+                        <Grid item xs={3}>
+                          <Typography
+                            variant="body1"
+                            className={classes.fontS1}
+                          >
+                            {user.username}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Typography
+                            variant="body1"
+                            className={classes.fontS1}
+                          >
+                            {user.email}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Typography
+                            variant="body1"
+                            className={classes.fontS1}
+                          >
+                            {user.phone}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Typography
+                            variant="body1"
+                            className={classes.fontS1}
+                          >
+                            <Label color={user.isActive ? 'success' : 'error'}>
+                              {user.isActive
+                                ? 'Đã kích hoạt'
+                                : 'Chưa kích hoạt'}
+                            </Label>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </React.Fragment>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="outlined"
+          color="inherit"
+          autoFocus
+          onClick={handleClose}
+        >
+          Đóng
+        </Button>
+      </DialogActions>
+    </BootstrapDialog>
   );
 };
 
