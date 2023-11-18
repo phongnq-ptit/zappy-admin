@@ -51,7 +51,7 @@ const AccountLists = () => {
           onChangeLoading(false);
         }, 500);
       });
-  }, []);
+  }, [queryParams]);
 
   return (
     <Grid container spacing={2} flexDirection="column">
