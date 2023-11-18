@@ -1,7 +1,11 @@
 import React from 'react';
 import useApi from './useApi';
-import { ApiListResponse, ApiSingleResponse } from 'src/types/interfaces/Base';
-import { IUpdateProfile, Profile } from 'src/types/interfaces/User';
+import { ApiSingleResponse } from 'src/types/interfaces/Base';
+import {
+  ICreateProfile,
+  IUpdateProfile,
+  Profile
+} from 'src/types/interfaces/User';
 import { convertFormData } from 'src/utils/Helper';
 
 const useProfileApi = () => {
@@ -30,10 +34,20 @@ const useProfileApi = () => {
     return DELETE<ApiSingleResponse<Profile>>(baseUrl, { data: { ids } });
   }
 
+  async function createProfile(
+    data: ICreateProfile
+  ): Promise<ApiSingleResponse<Profile>> {
+    return POST<ApiSingleResponse<Profile>>(
+      baseUrl + '/admin',
+      convertFormData(data)
+    );
+  }
+
   return {
     getProfileListsByUserId,
     updateProfile,
-    deleteProfile
+    deleteProfile,
+    createProfile
   };
 };
 
