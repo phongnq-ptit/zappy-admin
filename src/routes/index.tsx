@@ -60,9 +60,6 @@ const Status404 = Loader(
   lazy(() => import('src/content/pages/Status/Status404'))
 );
 
-//tmp
-const TMP = Loader(lazy(() => import('src/content/applications/Transactions')));
-
 const routes: RouteObject[] = [
   {
     path: '',
@@ -129,8 +126,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'logout',
-        element: <TMP />
-        // element: <Logout />
+        element: <Logout />
       },
       {
         path: '*',
