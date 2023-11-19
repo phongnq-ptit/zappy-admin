@@ -27,3 +27,8 @@ export const formatDateTime = (time: Date) => {
 export const formatDate = (time: Date) => {
   return format(new Date(time), 'dd/MM/yyy');
 };
+
+export const formatterVND = new Intl.NumberFormat('vi-VN', {
+  style: 'currency',
+  currency: 'VND'
+});

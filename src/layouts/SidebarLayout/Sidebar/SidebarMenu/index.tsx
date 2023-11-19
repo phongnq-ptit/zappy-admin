@@ -20,6 +20,7 @@ import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
+import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -267,6 +268,17 @@ function SidebarMenu() {
                   startIcon={<PeopleAltOutlinedIcon />}
                 >
                   Tác giả
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/packages"
+                  startIcon={<LoyaltyOutlinedIcon />}
+                >
+                  Gói ưu đãi
                 </Button>
               </ListItem>
             </List>
