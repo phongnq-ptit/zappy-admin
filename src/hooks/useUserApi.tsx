@@ -1,6 +1,11 @@
 import React from 'react';
 import useApi from './useApi';
-import { IUpdateUser, User, UserLogin } from '../types/interfaces/User';
+import {
+  IAddNewUser,
+  IUpdateUser,
+  User,
+  UserLogin
+} from '../types/interfaces/User';
 import {
   ApiListResponse,
   ApiSingleResponse,
@@ -36,12 +41,19 @@ const useUserApi = () => {
     return PATCH<ApiSingleResponse<User>>(baseUrl + `/${id}`, data);
   }
 
+  async function createUser(
+    data: IAddNewUser
+  ): Promise<ApiSingleResponse<User>> {
+    return POST<ApiSingleResponse<User>>(baseUrl + '/create', data);
+  }
+
   return {
     login,
     getMe,
     getAllUser,
     getUserById,
-    updateUser
+    updateUser,
+    createUser
   };
 };
 

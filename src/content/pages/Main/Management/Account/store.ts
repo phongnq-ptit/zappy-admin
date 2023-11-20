@@ -57,6 +57,9 @@ function init() {
     []
   );
 
+  const [reload, setReload] = useState<boolean>(false);
+  const onReloadApi = useCallback(() => setReload(!reload), []);
+
   const accountDefault: User = {
     id: 0,
     createdAt: new Date(),
@@ -87,7 +90,9 @@ function init() {
     handleChangeRowsPerPage,
     accountDefault,
     account,
-    onChangeAccount
+    onChangeAccount,
+    reload,
+    onReloadApi
   };
 }
 

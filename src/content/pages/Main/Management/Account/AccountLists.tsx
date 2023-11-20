@@ -35,7 +35,8 @@ const AccountLists = () => {
     handleChangePage,
     handleChangeRowsPerPage,
     listMetadata,
-    onChangeListMetadata
+    onChangeListMetadata,
+    reload
   } = useAccountStore();
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const AccountLists = () => {
           onChangeLoading(false);
         }, 500);
       });
-  }, [queryParams]);
+  }, [queryParams, reload]);
 
   return (
     <Grid container spacing={2} flexDirection="column">

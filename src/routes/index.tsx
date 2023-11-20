@@ -47,6 +47,9 @@ const ManageGenres = Loader(
 const ManagePackage = Loader(
   lazy(() => import('src/content/pages/Main/Management/Package'))
 );
+const AddPackage = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Package/AddPackage'))
+);
 
 const Login = Loader(
   lazy(() => import('src/content/pages/Main/Account/Login'))
@@ -126,6 +129,10 @@ const routes: RouteObject[] = [
       {
         path: Pathname.package,
         element: <ManagePackage />
+      },
+      {
+        path: `${Pathname.package}/add`,
+        element: <AddPackage />
       },
       {
         path: Pathname.infomation,

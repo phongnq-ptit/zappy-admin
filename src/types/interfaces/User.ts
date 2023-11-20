@@ -68,3 +68,12 @@ export type IUpdateUser = Pick<
   User,
   'username' | 'address' | 'isActive' | 'phone'
 >;
+
+export interface IAddNewUser {
+  email: string;
+  password: string;
+  username: string;
+  phone: string;
+  address: string;
+  isActive: boolean;
+}
