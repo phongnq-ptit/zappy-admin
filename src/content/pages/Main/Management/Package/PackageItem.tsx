@@ -49,7 +49,10 @@ const PackageItem = ({ _package }: Props) => {
           totalItems: listMetadata.totalItems - 1
         });
       })
-      .finally(() => setLoadingRemove(false));
+      .finally(() => {
+        setLoadingRemove(false);
+        setOpenDelete(false);
+      });
   };
 
   const getLabelState = (_package: IPackage) => {

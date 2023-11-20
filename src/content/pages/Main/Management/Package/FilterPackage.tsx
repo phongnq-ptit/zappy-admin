@@ -13,15 +13,27 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import DeletePackageDialog from './DeletePackageDialog';
+import usePackageApi from 'src/hooks/usePackageApi';
+import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 
 const FilterPackage = () => {
-  const { queryParams, onChangeQueryParams, loading, selected } =
-    usePackageStore();
+  const {
+    queryParams,
+    onChangeQueryParams,
+    loading,
+    selected,
+    packages,
+    onChangePackages,
+    onChangeSelected,
+    listMetadata,
+    onChangeListMetadata
+  } = usePackageStore();
   const [searchStr, setSearchStr] = useState<string>(
     queryParams.search === undefined ? '' : queryParams.search
   );
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [loadingRemove, setLoadingRemove] = useState<boolean>(false);
+  const { deletePackages } = usePackageApi();
 
   const onChangeSearch = (event: React.ChangeEvent) => {
     setSearchStr((event.target as HTMLInputElement).value);
@@ -41,7 +53,25 @@ const FilterPackage = () => {
     });
   };
 
-  const handleRemoveItemLists = () => {};
+  const handleRemoveItemLists = () => {
+    setLoadingRemove(true);
+    deletePackages(selected)
+      .then((response) => {
+        SuccessSnackbar('Xóa gói ưu đãi thành công!');
+        onChangePackages([
+          ...packages.filter((item) => !selected.includes(item.id))
+        ]);
+        onChangeListMetadata({
+          ...listMetadata,
+          totalItems: listMetadata.totalItems - selected.length
+        });
+      })
+      .finally(() => {
+        setLoadingRemove(false);
+        setOpenDelete(false);
+        onChangeSelected([]);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -121,3 +151,6 @@ const FilterPackage = () => {
 };
 
 export default FilterPackage;
+function onChangePackages(arg0: any[]) {
+  throw new Error('Function not implemented.');
+}

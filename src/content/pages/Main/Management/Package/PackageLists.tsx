@@ -52,6 +52,10 @@ const PackageLists = () => {
       });
   }, [queryParams]);
 
+  useEffect(() => {
+    onChangeSelected([]);
+  }, [listMetadata.currentPage]);
+
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       onChangeSelected(
