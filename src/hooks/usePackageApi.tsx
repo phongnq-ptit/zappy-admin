@@ -5,7 +5,8 @@ import {
   ApiSingleResponse,
   QueryParams
 } from 'src/types/interfaces/Base';
-import { IPackage } from 'src/types/interfaces/Package';
+import { IAddNewPackage, IPackage } from 'src/types/interfaces/Package';
+import { convertFormData } from 'src/utils/Helper';
 
 const usePackageApi = () => {
   const { GET, POST, PUT, DELETE } = useApi();
@@ -23,9 +24,16 @@ const usePackageApi = () => {
     return DELETE<ApiSingleResponse<IPackage>>(baseUrl, { data: { ids } });
   }
 
+  async function createPackage(
+    data: IAddNewPackage
+  ): Promise<ApiSingleResponse<IPackage>> {
+    return POST<ApiSingleResponse<IPackage>>(baseUrl, convertFormData(data));
+  }
+
   return {
     getPackageLists,
-    deletePackages
+    deletePackages,
+    createPackage
   };
 };
 

@@ -9,6 +9,7 @@ interface Props {
   notShowDelete?: boolean;
   style?: Record<string, string>;
   urlImage?: string;
+  fileType?: string;
 }
 
 const UploadImage = (props: Props) => {
@@ -62,7 +63,7 @@ const UploadImage = (props: Props) => {
           type="file"
           id="file_up"
           name="file"
-          accept="image/*"
+          accept={props.fileType || 'image/*'}
           onChange={handleUpload}
         />
         <div id="file_img" style={styleUpload}>

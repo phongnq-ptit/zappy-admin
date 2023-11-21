@@ -48,7 +48,7 @@ const AddNewAccount = () => {
   return (
     <>
       <Helmet>
-        <title>{`Tạp tài khoản| Zappy`}</title>
+        <title>{`Tạo tài khoản| Zappy`}</title>
       </Helmet>
       <Grid
         container
