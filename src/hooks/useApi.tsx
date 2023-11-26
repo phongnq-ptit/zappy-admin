@@ -7,7 +7,7 @@ interface IToken {
   refreshToken: string;
 }
 
-const IGNORE_ERRORS = ['user_not_found'];
+const IGNORE_ERRORS = ['user_not_found', 'package_not_found'];
 
 export default function useApi() {
   const login = localStorage.getItem('login');
@@ -23,6 +23,10 @@ export default function useApi() {
     instance = axios.create(config);
     instance.interceptors.response.use(
       (response) => {
+        if (!response.data?.success) {
+          if (!IGNORE_ERRORS.includes(response.data?.errorCode))
+            setGError({ isError: true, message: response.data?.message });
+        }
         return response.data;
       },
       (error) => {

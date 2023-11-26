@@ -26,3 +26,15 @@ export interface IAddNewPackage {
   endDate: Date;
   desc: string;
 }
+
+export interface IUpdatePackage {
+  name: string;
+  price: number;
+  golds: number;
+  discount: number;
+  state: PackageState;
+  image: File;
+  startDate: Date;
+  endDate: Date;
+  desc: string;
+}

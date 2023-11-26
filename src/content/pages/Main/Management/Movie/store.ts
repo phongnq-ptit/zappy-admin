@@ -1,17 +1,19 @@
 import { useCallback, useState } from 'react';
-import { UserRole } from 'src/types/enums/UserRole';
 import {
   ListMetadata,
   QueryParams,
   defaultListMetadata
 } from 'src/types/interfaces/Base';
-import { User } from 'src/types/interfaces/User';
+import { IMovie } from 'src/types/interfaces/Movie';
 import { useBetween } from 'use-between';
 
 function init() {
-  const [accounts, setAccounts] = useState<User[]>([]);
-  const onChangeAccounts = useCallback(
-    (value: User[]) => setAccounts(value),
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const onChangeMovies = useCallback((value: IMovie[]) => setMovies(value), []);
+
+  const [selected, setSelected] = useState<number[]>([]);
+  const onChangeSelected = useCallback(
+    (value: number[]) => setSelected(value),
     []
   );
 
@@ -26,17 +28,12 @@ function init() {
     limit: 10,
     page: 1,
     search: undefined,
-    filter: JSON.stringify({ role: UserRole.PARENTS })
+    filter: undefined
   });
-  const onChangeQueryParams = useCallback((value: QueryParams) => {
-    let filter = value?.filter ? JSON.parse(value?.filter) : {};
-    filter = { ...filter, role: UserRole.PARENTS };
-
-    return setQueryParams({
-      ...value,
-      filter: JSON.stringify(filter)
-    });
-  }, []);
+  const onChangeQueryParams = useCallback(
+    (value: QueryParams) => setQueryParams(value),
+    []
+  );
 
   const handleChangeRowsPerPage = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -62,29 +59,7 @@ function init() {
     []
   );
 
-  const [reload, setReload] = useState<boolean>(false);
-  const onReloadApi = useCallback(() => setReload(!reload), []);
-
-  const accountDefault: User = {
-    id: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    username: '',
-    email: '',
-    address: '',
-    phone: '',
-    isActive: false,
-    golds: 0,
-    role: UserRole.PARENTS,
-    provider: 1,
-    profiles: []
-  };
-  const [account, setAccount] = useState<User>(accountDefault);
-  const onChangeAccount = useCallback((value: User) => setAccount(value), []);
-
   return {
-    accounts,
-    onChangeAccounts,
     listMetadata,
     onChangeListMetadata,
     queryParams,
@@ -93,12 +68,11 @@ function init() {
     onChangeLoading,
     handleChangePage,
     handleChangeRowsPerPage,
-    accountDefault,
-    account,
-    onChangeAccount,
-    reload,
-    onReloadApi
+    movies,
+    onChangeMovies,
+    selected,
+    onChangeSelected
   };
 }
 
-export const useAccountStore = () => useBetween(init);
+export const useMovieStore = () => useBetween(init);

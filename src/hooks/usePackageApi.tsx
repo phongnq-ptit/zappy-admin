@@ -5,7 +5,11 @@ import {
   ApiSingleResponse,
   QueryParams
 } from 'src/types/interfaces/Base';
-import { IAddNewPackage, IPackage } from 'src/types/interfaces/Package';
+import {
+  IAddNewPackage,
+  IPackage,
+  IUpdatePackage
+} from 'src/types/interfaces/Package';
 import { convertFormData } from 'src/utils/Helper';
 
 const usePackageApi = () => {
@@ -16,6 +20,10 @@ const usePackageApi = () => {
     query?: QueryParams
   ): Promise<ApiListResponse<IPackage[]>> {
     return GET<ApiListResponse<IPackage[]>>(baseUrl, query);
+  }
+
+  function getPackageById(id: number): Promise<ApiSingleResponse<IPackage>> {
+    return GET<ApiSingleResponse<IPackage>>(baseUrl + `/${id}`);
   }
 
   async function deletePackages(
@@ -30,10 +38,22 @@ const usePackageApi = () => {
     return POST<ApiSingleResponse<IPackage>>(baseUrl, convertFormData(data));
   }
 
+  async function updatePackage(
+    id: number,
+    data: IUpdatePackage
+  ): Promise<ApiSingleResponse<IPackage>> {
+    return PUT<ApiSingleResponse<IPackage>>(
+      baseUrl + `/${id}`,
+      convertFormData(data)
+    );
+  }
+
   return {
     getPackageLists,
     deletePackages,
-    createPackage
+    createPackage,
+    getPackageById,
+    updatePackage
   };
 };
 

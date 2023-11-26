@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { usePackageStore } from './store';
 import {
   Button,
   FormControl,
@@ -12,28 +11,29 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
-import DeletePackageDialog from './DeletePackageDialog';
-import usePackageApi from 'src/hooks/usePackageApi';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
+import useMovieApi from 'src/hooks/useMovieApi';
+import DeleteMoviesDialog from './DeleteMoviesDialog';
+import { useMovieStore } from './store';
 
-const FilterPackage = () => {
+const FilterMovie = () => {
   const {
     queryParams,
     onChangeQueryParams,
     loading,
     selected,
-    packages,
-    onChangePackages,
+    movies,
+    onChangeMovies,
     onChangeSelected,
     listMetadata,
     onChangeListMetadata
-  } = usePackageStore();
+  } = useMovieStore();
   const [searchStr, setSearchStr] = useState<string>(
     queryParams.search === undefined ? '' : queryParams.search
   );
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [loadingRemove, setLoadingRemove] = useState<boolean>(false);
-  const { deletePackages } = usePackageApi();
+  const { deleteMovies } = useMovieApi();
 
   const onChangeSearch = (event: React.ChangeEvent) => {
     setSearchStr((event.target as HTMLInputElement).value);
@@ -55,11 +55,11 @@ const FilterPackage = () => {
 
   const handleRemoveItemLists = () => {
     setLoadingRemove(true);
-    deletePackages(selected)
+    deleteMovies(selected)
       .then((response) => {
-        SuccessSnackbar('Xóa gói ưu đãi thành công!');
-        onChangePackages([
-          ...packages.filter((item) => !selected.includes(item.id))
+        SuccessSnackbar('Xóa phim thành công!');
+        onChangeMovies([
+          ...movies.filter((item) => !selected.includes(item.id))
         ]);
         onChangeListMetadata({
           ...listMetadata,
@@ -139,7 +139,7 @@ const FilterPackage = () => {
         )}
       </Grid>
       {openDelete && (
-        <DeletePackageDialog
+        <DeleteMoviesDialog
           open={openDelete}
           setOpen={setOpenDelete}
           onAction={handleRemoveItemLists}
@@ -150,4 +150,4 @@ const FilterPackage = () => {
   );
 };
 
-export default FilterPackage;
+export default FilterMovie;

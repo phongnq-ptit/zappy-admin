@@ -21,11 +21,13 @@ import { IAddNewPackage } from 'src/types/interfaces/Package';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
 
 const AddPackage = () => {
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control, reset, watch, setValue } = useForm();
   const naviagate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [fileUp, setFileUp] = useState<File>();
   const { createPackage } = usePackageApi();
+
+  const startDate = watch('startDate');
 
   const save = (data: IAddNewPackage) => {
     if (fileUp) data.image = fileUp;
@@ -80,6 +82,7 @@ const AddPackage = () => {
                     <UploadImage
                       fileUpload={fileUp}
                       setFileUpload={setFileUp}
+                      style={{ height: '390px' }}
                     />
                   </Grid>
                 </Grid>
@@ -214,7 +217,10 @@ const AddPackage = () => {
                           <DatePicker
                             label="Ngày Bắt Đầu"
                             value={value}
-                            onChange={onChange}
+                            onChange={(date) => {
+                              onChange(date);
+                              setValue('endDate', '', { shouldValidate: true });
+                            }}
                             inputFormat="dd/MM/yyyy"
                             renderInput={(props: TextFieldProps) => (
                               <TextField
@@ -268,7 +274,11 @@ const AddPackage = () => {
                             // prettier-ignore
                             value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
                             message: 'Định dạng ngày tháng năm không chính xác!'
-                          }
+                          },
+                          validate: (value) =>
+                            new Date(value).getTime() >
+                              new Date(startDate).getTime() ||
+                            'Ngày hết hạn phải lớn hơn Ngày Bắt Đầu'
                         }}
                       />
                     </Grid>

@@ -30,7 +30,7 @@ const AccountDetail = Loader(
   lazy(() => import('src/content/pages/Main/Management/Account/AccountDetail'))
 );
 const ManageMovie = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageMovie'))
+  lazy(() => import('src/content/pages/Main/Management/Movie'))
 );
 const ManageMusic = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageMusic'))
@@ -49,6 +49,9 @@ const ManagePackage = Loader(
 );
 const AddPackage = Loader(
   lazy(() => import('src/content/pages/Main/Management/Package/AddPackage'))
+);
+const EditPackage = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Package/EditPackage'))
 );
 
 const Login = Loader(
@@ -133,6 +136,10 @@ const routes: RouteObject[] = [
       {
         path: `${Pathname.package}/add`,
         element: <AddPackage />
+      },
+      {
+        path: `${Pathname.package}/:packageId`,
+        element: <EditPackage />
       },
       {
         path: Pathname.infomation,

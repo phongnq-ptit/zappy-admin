@@ -17,6 +17,8 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Label from 'src/components/Label';
 import usePackageApi from 'src/hooks/usePackageApi';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
+import { useNavigate } from 'react-router';
+import { Pathname } from 'src/routes/path';
 
 interface Props {
   _package: IPackage;
@@ -24,6 +26,7 @@ interface Props {
 
 const PackageItem = ({ _package }: Props) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const {
     selected,
     onChangeSelected,
@@ -179,7 +182,9 @@ const PackageItem = ({ _package }: Props) => {
               }}
               color="inherit"
               size="small"
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/${Pathname.package}/${_package.id}`);
+              }}
             >
               <EditTwoToneIcon fontSize="small" />
             </IconButton>
