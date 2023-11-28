@@ -222,14 +222,33 @@ const EditMovie = () => {
                     </Grid>
                   </Grid>
                   <Grid item xs={6}>
-                    <FileUpload
-                      value={video}
-                      onChange={setVideo}
-                      title="Chọn video cho phim tại đây"
-                      accept="video/*"
-                      buttonText="Tải video lên"
-                      multiple={false}
-                    />
+                    <Grid
+                      container
+                      flexDirection="column"
+                      sx={{ width: '100%' }}
+                    >
+                      <Grid item sx={{ width: '100%' }}>
+                        <FileUpload
+                          value={video}
+                          onChange={setVideo}
+                          title="Chọn video cho phim tại đây"
+                          accept="video/*"
+                          buttonText="Tải video lên"
+                          multiple={false}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <FormControlLabel
+                          label="Thay đổi video phim"
+                          control={
+                            <Checkbox
+                              checked={isChangeVideo}
+                              onChange={handleChangeVideo}
+                            />
+                          }
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={12}>
                     <form onSubmit={handleSubmit(save)}>
