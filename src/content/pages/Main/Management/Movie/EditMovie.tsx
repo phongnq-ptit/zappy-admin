@@ -382,6 +382,9 @@ const EditMovie = () => {
                             options={authors}
                             disableCloseOnSelect
                             defaultValue={movie.authors}
+                            isOptionEqualToValue={(option, value) =>
+                              option.id === value.id
+                            }
                             noOptionsText={'Không có kết quả phù hợp'}
                             onChange={(event, newValue: Author[]) =>
                               setAuthorIds(newValue.map((item) => item.id))
@@ -415,6 +418,9 @@ const EditMovie = () => {
                             noOptionsText={'Không có kết quả phù hợp'}
                             onChange={(event, newValue: Genre[]) =>
                               setGenreIds(newValue.map((item) => item.id))
+                            }
+                            isOptionEqualToValue={(option, value) =>
+                              option.id === value.id
                             }
                             getOptionLabel={(option: Genre) => option.name}
                             renderOption={(props, option, { selected }) => (
