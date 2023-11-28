@@ -130,6 +130,17 @@ const MovieItem = ({ movie }: Props) => {
           </Typography>
         </TableCell>
         <TableCell align="center">
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            color="text.primary"
+            gutterBottom
+            noWrap
+          >
+            {`${movie.golds} vàng`}
+          </Typography>
+        </TableCell>
+        <TableCell align="center">
           <Label color={getLabelState(movie).color as any}>
             {getLabelState(movie).text}
           </Label>

@@ -50,7 +50,7 @@ const UploadImage = (props: Props) => {
     <Box display="flex" justifyContent="center" alignItems="center">
       <Box
         sx={{
-          maxWidth: '450px',
+          // maxWidth: '450px',
           height: '300px',
           width: '100%',
           border: '1px solid #ddd',

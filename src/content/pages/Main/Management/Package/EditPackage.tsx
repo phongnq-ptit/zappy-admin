@@ -25,6 +25,7 @@ import usePackageApi from 'src/hooks/usePackageApi';
 import { Pathname } from 'src/routes/path';
 import { IPackage, IUpdatePackage } from 'src/types/interfaces/Package';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
+import SkeletonDetail from './SkeletonDetail';
 
 const useStyles = makeStyles({
   helpText: {
@@ -126,8 +127,7 @@ const EditPackage = () => {
       ) : (
         <>
           {loadingPg ? (
-            // <SkeletonAccDetail />
-            <>loading</>
+            <SkeletonDetail />
           ) : (
             <>
               <Helmet>

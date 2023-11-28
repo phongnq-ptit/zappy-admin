@@ -82,6 +82,7 @@ const MovieLists = () => {
                   <TableCell align="center">Ngày ra mắt</TableCell>
                   <TableCell align="center">Thời Lượng</TableCell>
                   <TableCell align="center">Lượt xem/Lượt thích</TableCell>
+                  <TableCell align="center">Giá vàng</TableCell>
                   <TableCell align="center">Trạng thái</TableCell>
                   <TableCell align="right"></TableCell>
                 </TableRow>

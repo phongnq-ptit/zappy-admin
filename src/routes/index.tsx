@@ -32,6 +32,12 @@ const AccountDetail = Loader(
 const ManageMovie = Loader(
   lazy(() => import('src/content/pages/Main/Management/Movie'))
 );
+const AddMovie = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Movie/AddMovie'))
+);
+const EditMovie = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Movie/EditMovie'))
+);
 const ManageMusic = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageMusic'))
 );
@@ -120,6 +126,14 @@ const routes: RouteObject[] = [
       {
         path: Pathname.movies,
         element: <ManageMovie />
+      },
+      {
+        path: `${Pathname.movies}/add`,
+        element: <AddMovie />
+      },
+      {
+        path: `${Pathname.movies}/:movieId`,
+        element: <EditMovie />
       },
       {
         path: Pathname.genres,

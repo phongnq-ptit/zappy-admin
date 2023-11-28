@@ -28,6 +28,9 @@ const SkeletonMovies = () => {
           <TableCell align="center">
             <Skeleton />
           </TableCell>
+          <TableCell align="center">
+            <Skeleton />
+          </TableCell>
           <TableCell>
             <Grid container spacing={2}>
               <Grid item xs={6}>

@@ -13,7 +13,7 @@ const IGNORE_ERRORS = [
   'media_not_found'
 ];
 
-export default function useApi() {
+export default function useMediaApi() {
   const login = localStorage.getItem('login');
   const token: IToken = login
     ? JSON.parse(login)
@@ -45,37 +45,19 @@ export default function useApi() {
     return instance;
   }
 
-  async function GET<T>(url: string, params?: any): Promise<T> {
+  async function M_GET<T>(url: string, params?: any): Promise<T> {
     const api = await AXIOS();
     return api.get(url, { params: params });
   }
 
-  async function POST<T>(url: string, body: any, params?: any): Promise<T> {
+  async function M_POST<T>(url: string, body: any, params?: any): Promise<T> {
     const api = await AXIOS();
     return api.post(url, body, { params: params });
   }
 
-  async function PUT<T>(url: string, body: any, params?: any): Promise<T> {
-    const api = await AXIOS();
-    return api.put(url, body, { params: params });
-  }
-
-  async function PATCH<T>(url: string, body: any, params?: any): Promise<T> {
-    const api = await AXIOS();
-    return api.patch(url, body, { params: params });
-  }
-
-  async function DELETE<T>(
-    url: string,
-    query: { data?: any; params?: any }
-  ): Promise<T> {
-    const api = await AXIOS();
-    return api.delete(url, query);
-  }
-
   const getConfig = () => {
     return {
-      baseURL: process.env.REACT_APP_API_URL,
+      baseURL: process.env.REACT_APP_API_MEDIA_SERVICE,
       headers: {
         ContentType: 'application/json',
         Accept: 'application/json',
@@ -84,5 +66,5 @@ export default function useApi() {
     };
   };
 
-  return { GET, POST, PUT, PATCH, DELETE };
+  return { M_GET, M_POST };
 }
