@@ -21,11 +21,9 @@ import { Helmet } from 'react-helmet-async';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import UploadImage from 'src/components/UploadFile/UploadImage';
-import useMovieApi from 'src/hooks/useMovieApi';
 import { Pathname } from 'src/routes/path';
 import { IAddNewMovie } from 'src/types/interfaces/Movie';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
-import { useMovieStore } from './store';
 import useGenreApi from 'src/hooks/useGenreApi';
 import useAuthorApi from 'src/hooks/useAuthorApi';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -33,19 +31,21 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { Author } from 'src/types/interfaces/Author';
 import { Genre } from 'src/types/interfaces/Genre';
 import FileUpload from 'react-material-file-upload';
+import { useMusicStore } from './store';
+import useMusicApi from 'src/hooks/useMusicApi';
 
-const AddMovie = () => {
+const AddMusic = () => {
   const { handleSubmit, control, reset, watch, setValue } = useForm();
   const naviagate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [fileUp, setFileUp] = useState<File>();
-  const { createMovie, upVideo } = useMovieApi();
-  const { getGenreMovie } = useGenreApi();
-  const { getAuthorMovie } = useAuthorApi();
-  const { authors, getMovieAuthors, genres, getMovieGenres } = useMovieStore();
+  const { createMusic, upMusic } = useMusicApi();
+  const { getGenreMusic } = useGenreApi();
+  const { getAuthorMusic } = useAuthorApi();
+  const { authors, getMovieAuthors, genres, getMovieGenres } = useMusicStore();
   const [genreIds, setGenreIds] = useState<number[]>([]);
   const [authorIds, setAuthorIds] = useState<number[]>([]);
-  const [video, setVideo] = useState<File[]>([]);
+  const [audio, setAudio] = useState<File[]>([]);
   const [isProcess, setIsProcess] = useState<boolean>(false);
 
   const save = (data: IAddNewMovie) => {
@@ -54,30 +54,30 @@ const AddMovie = () => {
       WarningSnackbar('Cần phải tải ảnh lên!');
       return;
     }
-    if (!video.length) {
-      WarningSnackbar('Cần phải tải video lên!');
+    if (!audio.length) {
+      WarningSnackbar('Cần phải tải audio lên!');
       return;
     }
     let isSuccess = false;
     data.authorIds = authorIds;
     data.genreIds = genreIds;
     setLoading(true);
-    createMovie(data)
+    createMusic(data)
       .then((response) => {
         if (response.success) {
           isSuccess = response.success;
           setIsProcess(true);
-          upVideo(response.data.id, { movie: video[0] })
+          upMusic(response.data.id, { music: audio[0] })
             .then((_response) => {
               if (_response.success) {
-                SuccessSnackbar('Thêm phim mới thành công!');
+                SuccessSnackbar('Thêm bản nhạc mới thành công!');
               }
             })
             .catch((e) => console.log(e))
             .finally(() => {
               resetForm();
               setIsProcess(false);
-              naviagate('/' + Pathname.movies);
+              naviagate('/' + Pathname.musics);
             });
         }
       })
@@ -88,15 +88,15 @@ const AddMovie = () => {
 
   useEffect(() => {
     resetForm();
-    getMovieAuthors(getAuthorMovie);
-    getMovieGenres(getGenreMovie);
+    getMovieAuthors(getAuthorMusic);
+    getMovieGenres(getGenreMusic);
   }, []);
 
   const resetForm = () => {
     setLoading(false);
     reset();
     setFileUp(null);
-    setVideo([]);
+    setAudio([]);
     setGenreIds([]);
     setAuthorIds([]);
   };
@@ -104,7 +104,7 @@ const AddMovie = () => {
   return (
     <>
       <Helmet>
-        <title>{`Tạo phim mới| Zappy`}</title>
+        <title>{`Tạo bản nhạc mới| Zappy`}</title>
       </Helmet>
       <Grid
         container
@@ -114,7 +114,7 @@ const AddMovie = () => {
       >
         <Grid item xs={12}>
           <Typography variant="h2" gutterBottom textAlign="center">
-            {`Tạo phim mới `.toUpperCase()}&nbsp;
+            {`Tạo nhạc mới `.toUpperCase()}&nbsp;
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -129,11 +129,11 @@ const AddMovie = () => {
               </Grid>
               <Grid item xs={6}>
                 <FileUpload
-                  value={video}
-                  onChange={setVideo}
-                  title="Chọn video cho phim tại đây"
-                  accept="video/*"
-                  buttonText="Tải video lên"
+                  value={audio}
+                  onChange={setAudio}
+                  title="Chọn audio cho nhạc tại đây"
+                  accept="audio/*"
+                  buttonText="Tải audio lên"
                   multiple={false}
                 />
               </Grid>
@@ -150,7 +150,7 @@ const AddMovie = () => {
                           fieldState: { error }
                         }) => (
                           <TextField
-                            label={'Tên Phim'}
+                            label={'Tên Nhạc'}
                             variant="outlined"
                             value={value}
                             onChange={onChange}
@@ -393,7 +393,7 @@ const AddMovie = () => {
                         autoFocus
                         sx={{ float: 'right' }}
                       >
-                        <span>Tạo Phim Mới</span>
+                        <span>Tạo Nhạc Mới</span>
                       </LoadingButton>
                     </Grid>
                   </Grid>
@@ -405,7 +405,7 @@ const AddMovie = () => {
       </Grid>
       <Dialog onClose={() => {}} open={isProcess}>
         <DialogTitle>
-          Quá trình tải video có thể mất vài phút. Vui lòng chờ trong giây lát!
+          Quá trình tải audio có thể mất vài phút. Vui lòng chờ trong giây lát!
         </DialogTitle>
         <Grid
           container
@@ -423,4 +423,4 @@ const AddMovie = () => {
   );
 };
 
-export default AddMovie;
+export default AddMusic;

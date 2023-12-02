@@ -19,11 +19,8 @@ import { Helmet } from 'react-helmet-async';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import UploadImage from 'src/components/UploadFile/UploadImage';
-import useMovieApi from 'src/hooks/useMovieApi';
 import { Pathname } from 'src/routes/path';
-import { IAddNewMovie, IMovie } from 'src/types/interfaces/Movie';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
-import { useMovieStore } from './store';
 import useGenreApi from 'src/hooks/useGenreApi';
 import useAuthorApi from 'src/hooks/useAuthorApi';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -34,26 +31,29 @@ import FileUpload from 'react-material-file-upload';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import Status404 from 'src/content/pages/Status/Status404';
 import SkeletonDetail from './SkeletonDetail';
+import { IAddNewMusic, IMusic } from 'src/types/interfaces/Music';
+import useMusicApi from 'src/hooks/useMusicApi';
+import { useMusicStore } from './store';
 
-const EditMovie = () => {
+const EditMusic = () => {
   const { handleSubmit, control, reset, watch, setValue } = useForm();
   const naviagate = useNavigate();
   const params = useParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [fileUp, setFileUp] = useState<File>();
   const [isChangeFile, setIsChangeFile] = useState<boolean>(false);
-  const { updateMovie, getMovieById, upVideo } = useMovieApi();
-  const { getGenreMovie } = useGenreApi();
-  const { getAuthorMovie } = useAuthorApi();
-  const { authors, getMovieAuthors, genres, getMovieGenres } = useMovieStore();
+  const { upMusic, updateMusic, getMusicById } = useMusicApi();
+  const { getGenreMusic } = useGenreApi();
+  const { getAuthorMusic } = useAuthorApi();
+  const { authors, getMovieAuthors, genres, getMovieGenres } = useMusicStore();
   const [genreIds, setGenreIds] = useState<number[]>([]);
   const [authorIds, setAuthorIds] = useState<number[]>([]);
-  const [video, setVideo] = useState<File[]>([]);
-  const [isChangeVideo, setIsChangeVideo] = useState<boolean>(false);
+  const [audio, setAudio] = useState<File[]>([]);
+  const [isChangeAudio, setIsChangeAudio] = useState<boolean>(false);
   const [loadingPg, setLoadingPg] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [isProcess, setIsProcess] = useState<boolean>(false);
-  const [movie, setMovie] = useState<IMovie>({
+  const [music, setMusic] = useState<IMusic>({
     id: 99999,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -74,32 +74,32 @@ const EditMovie = () => {
     isAccess: false
   });
 
-  const save = (data: Partial<IAddNewMovie>) => {
+  const save = (data: Partial<IAddNewMusic>) => {
     if (isChangeFile && !fileUp) {
       WarningSnackbar('Thay đổi ảnh cần phải tải ảnh lên!');
       return;
     }
-    if (isChangeVideo && !video.length) {
-      WarningSnackbar('Thay đổi video cần phải tải video lên!');
+    if (isChangeAudio && !audio.length) {
+      WarningSnackbar('Thay đổi audio cần phải tải audio lên!');
       return;
     }
     if (isChangeFile && fileUp) data.image = fileUp;
     data.authorIds = authorIds;
     data.genreIds = genreIds;
     setLoading(true);
-    updateMovie(movie.id, data)
+    updateMusic(music.id, data)
       .then((response) => {
         if (response.success) {
-          setMovie(response.data);
-          if (isChangeVideo && video.length) {
+          setMusic(response.data);
+          if (isChangeAudio && audio.length) {
             setIsProcess(true);
-            upVideo(movie.id, { movie: video[0] }).finally(() => {
-              SuccessSnackbar('Cập nhật thông tin phim thành công!');
+            upMusic(music.id, { music: audio[0] }).finally(() => {
+              SuccessSnackbar('Cập nhật thông tin nhạc thành công!');
               naviagate('/' + Pathname.movies);
               setIsProcess(false);
             });
           } else {
-            SuccessSnackbar('Cập nhật thông tin phim thành công!');
+            SuccessSnackbar('Cập nhật thông tin nhạc thành công!');
           }
         }
       })
@@ -110,16 +110,16 @@ const EditMovie = () => {
   };
 
   useEffect(() => {
-    if (params.movieId) {
+    if (params.musicId) {
       reset();
       resetForm();
       setLoadingPg(true);
       Promise.all([
-        getMovieAuthors(getAuthorMovie),
-        getMovieGenres(getGenreMovie),
-        getMovieById(Number(params.movieId)).then((response) => {
+        getMovieAuthors(getAuthorMusic),
+        getMovieGenres(getGenreMusic),
+        getMusicById(Number(params.musicId)).then((response) => {
           if (response.data) {
-            setMovie(response.data);
+            setMusic(response.data);
             setAuthorIds(response.data.authors.map((i) => i.id));
             setGenreIds(response.data.genres.map((i) => i.id));
           } else {
@@ -130,15 +130,15 @@ const EditMovie = () => {
         setLoadingPg(false);
       });
     }
-  }, [params.movieId]);
+  }, [params.musicId]);
 
   const resetForm = () => {
     setFileUp(null);
     setIsChangeFile(false);
-    setIsChangeVideo(false);
+    setIsChangeAudio(false);
     setIsProcess(false);
     setLoading(false);
-    setVideo([]);
+    setAudio([]);
     setGenreIds([]);
     setAuthorIds([]);
   };
@@ -150,17 +150,17 @@ const EditMovie = () => {
     setIsChangeFile(event.target.checked);
   };
 
-  const handleChangeVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeAudio = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.checked) {
-      setVideo([]);
+      setAudio([]);
     }
-    setIsChangeVideo(event.target.checked);
+    setIsChangeAudio(event.target.checked);
   };
 
   return (
     <>
       <Helmet>
-        <title>{`${movie.title}| Zappy`}</title>
+        <title>{`${music.title}| Zappy`}</title>
       </Helmet>
       {notFound ? (
         <Box
@@ -169,7 +169,7 @@ const EditMovie = () => {
           alignItems="center"
           sx={{ width: '100%', height: '88vh' }}
         >
-          <Status404 url={`/${Pathname.movies}`} />
+          <Status404 url={`/${Pathname.musics}`} />
         </Box>
       ) : (
         <Grid
@@ -180,7 +180,7 @@ const EditMovie = () => {
         >
           <Grid item xs={12}>
             <Typography variant="h2" gutterBottom textAlign="center">
-              {`Phim: ${movie.title}`.toUpperCase()}&nbsp;
+              {`Nhạc: ${music.title}`.toUpperCase()}&nbsp;
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -199,9 +199,9 @@ const EditMovie = () => {
                         <UploadImage
                           fileUpload={fileUp}
                           urlImage={
-                            movie.thumbnail && isChangeFile
+                            music.thumbnail && isChangeFile
                               ? ''
-                              : movie.thumbnail
+                              : music.thumbnail
                           }
                           setFileUpload={setFileUp}
                           notShowDelete={!isChangeFile}
@@ -209,9 +209,9 @@ const EditMovie = () => {
                         />
                       </Grid>
                       <Grid item>
-                        {movie.thumbnail && (
+                        {music.thumbnail && (
                           <FormControlLabel
-                            label="Thay đổi ảnh bộ phim"
+                            label="Thay đổi ảnh bản nhạc"
                             control={
                               <Checkbox
                                 checked={isChangeFile}
@@ -231,11 +231,11 @@ const EditMovie = () => {
                     >
                       <Grid item sx={{ width: '100%' }}>
                         <FileUpload
-                          value={video}
-                          onChange={setVideo}
-                          title="Chọn video cho phim tại đây"
-                          accept="video/*"
-                          buttonText="Tải video lên"
+                          value={audio}
+                          onChange={setAudio}
+                          title="Chọn audip cho phim tại đây"
+                          accept="audio/*"
+                          buttonText="Tải audio lên"
                           multiple={false}
                         />
                       </Grid>
@@ -244,8 +244,8 @@ const EditMovie = () => {
                           label="Thay đổi video phim"
                           control={
                             <Checkbox
-                              checked={isChangeVideo}
-                              onChange={handleChangeVideo}
+                              checked={isChangeAudio}
+                              onChange={handleChangeAudio}
                             />
                           }
                         />
@@ -259,13 +259,13 @@ const EditMovie = () => {
                           <Controller
                             name="title"
                             control={control}
-                            defaultValue={movie.title}
+                            defaultValue={music.title}
                             render={({
                               field: { onChange, value },
                               fieldState: { error }
                             }) => (
                               <TextField
-                                label={'Tên Phim'}
+                                label={'Tên Nhạc'}
                                 variant="outlined"
                                 value={value}
                                 onChange={onChange}
@@ -281,7 +281,7 @@ const EditMovie = () => {
                           <Controller
                             name="minAge"
                             control={control}
-                            defaultValue={movie.minAge}
+                            defaultValue={music.minAge}
                             render={({
                               field: { onChange, value },
                               fieldState: { error }
@@ -323,7 +323,7 @@ const EditMovie = () => {
                           <Controller
                             name="golds"
                             control={control}
-                            defaultValue={movie.golds}
+                            defaultValue={music.golds}
                             render={({
                               field: { onChange, value },
                               fieldState: { error }
@@ -365,7 +365,7 @@ const EditMovie = () => {
                           <Controller
                             name="publishDate"
                             control={control}
-                            defaultValue={new Date(movie.publishDate)}
+                            defaultValue={new Date(music.publishDate)}
                             render={({
                               field: { onChange, value },
                               fieldState: { error }
@@ -402,7 +402,7 @@ const EditMovie = () => {
                             multiple
                             options={authors}
                             disableCloseOnSelect
-                            defaultValue={movie.authors}
+                            defaultValue={music.authors}
                             isOptionEqualToValue={(option, value) =>
                               option.id === value.id
                             }
@@ -435,7 +435,7 @@ const EditMovie = () => {
                             multiple
                             options={genres}
                             disableCloseOnSelect
-                            defaultValue={movie.genres}
+                            defaultValue={music.genres}
                             noOptionsText={'Không có kết quả phù hợp'}
                             onChange={(event, newValue: Genre[]) =>
                               setGenreIds(newValue.map((item) => item.id))
@@ -471,7 +471,7 @@ const EditMovie = () => {
                             <Controller
                               name="state"
                               control={control}
-                              defaultValue={movie.state}
+                              defaultValue={music.state}
                               rules={{ required: 'Trường này bắt buộc' }}
                               render={({
                                 field: { onChange, value },
@@ -499,7 +499,7 @@ const EditMovie = () => {
                           <Controller
                             name="desc"
                             control={control}
-                            defaultValue={movie.desc}
+                            defaultValue={music.desc}
                             render={({
                               field: { onChange, value },
                               fieldState: { error }
@@ -529,7 +529,7 @@ const EditMovie = () => {
                             autoFocus
                             sx={{ float: 'right' }}
                           >
-                            <span>Cập Nhật Phim</span>
+                            <span>Cập Nhật Bản Nhạc</span>
                           </LoadingButton>
                         </Grid>
                       </Grid>
@@ -544,4 +544,4 @@ const EditMovie = () => {
     </>
   );
 };
-export default EditMovie;
+export default EditMusic;

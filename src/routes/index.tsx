@@ -39,7 +39,13 @@ const EditMovie = Loader(
   lazy(() => import('src/content/pages/Main/Management/Movie/EditMovie'))
 );
 const ManageMusic = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageMusic'))
+  lazy(() => import('src/content/pages/Main/Management/Music'))
+);
+const AddMusic = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Music/AddMusic'))
+);
+const EditMusic = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Music/EditMusic'))
 );
 const ManageComic = Loader(
   lazy(() => import('src/content/pages/Main/Management/ManageComic'))
@@ -122,6 +128,14 @@ const routes: RouteObject[] = [
       {
         path: Pathname.musics,
         element: <ManageMusic />
+      },
+      {
+        path: `${Pathname.musics}/add`,
+        element: <AddMusic />
+      },
+      {
+        path: `${Pathname.musics}/:musicId`,
+        element: <EditMusic />
       },
       {
         path: Pathname.movies,
