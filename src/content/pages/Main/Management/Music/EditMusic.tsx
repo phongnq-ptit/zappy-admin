@@ -3,6 +3,9 @@ import {
   Autocomplete,
   Box,
   Checkbox,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   Grid,
@@ -28,14 +31,23 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { Author } from 'src/types/interfaces/Author';
 import { Genre } from 'src/types/interfaces/Genre';
 import FileUpload from 'react-material-file-upload';
-import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import Status404 from 'src/content/pages/Status/Status404';
 import SkeletonDetail from './SkeletonDetail';
 import { IAddNewMusic, IMusic } from 'src/types/interfaces/Music';
 import useMusicApi from 'src/hooks/useMusicApi';
 import { useMusicStore } from './store';
+import ReactPlayer from 'react-player';
+
+interface IToken {
+  accessToken: string;
+  refreshToken: string;
+}
 
 const EditMusic = () => {
+  const login = localStorage.getItem('login');
+  const token: IToken = login
+    ? JSON.parse(login)
+    : { accessToken: '', refreshToken: '' };
   const { handleSubmit, control, reset, watch, setValue } = useForm();
   const naviagate = useNavigate();
   const params = useParams();
@@ -93,11 +105,16 @@ const EditMusic = () => {
           setMusic(response.data);
           if (isChangeAudio && audio.length) {
             setIsProcess(true);
-            upMusic(music.id, { music: audio[0] }).finally(() => {
-              SuccessSnackbar('Cập nhật thông tin nhạc thành công!');
-              naviagate('/' + Pathname.movies);
-              setIsProcess(false);
-            });
+            upMusic(music.id, { music: audio[0] })
+              .then((res) => {})
+              .catch((e) => {
+                console.log(e);
+              })
+              .finally(() => {
+                SuccessSnackbar('Cập nhật thông tin nhạc thành công!');
+                naviagate('/' + Pathname.musics);
+                setIsProcess(false);
+              });
           } else {
             SuccessSnackbar('Cập nhật thông tin nhạc thành công!');
           }
@@ -110,6 +127,7 @@ const EditMusic = () => {
   };
 
   useEffect(() => {
+    setIsProcess(false);
     if (params.musicId) {
       reset();
       resetForm();
@@ -136,7 +154,6 @@ const EditMusic = () => {
     setFileUp(null);
     setIsChangeFile(false);
     setIsChangeAudio(false);
-    setIsProcess(false);
     setLoading(false);
     setAudio([]);
     setGenreIds([]);
@@ -172,375 +189,422 @@ const EditMusic = () => {
           <Status404 url={`/${Pathname.musics}`} />
         </Box>
       ) : (
-        <Grid
-          container
-          spacing={3}
-          flexDirection="column"
-          sx={{ width: '100%', my: 2 }}
-        >
-          <Grid item xs={12}>
-            <Typography variant="h2" gutterBottom textAlign="center">
-              {`Nhạc: ${music.title}`.toUpperCase()}&nbsp;
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            {loadingPg ? (
-              <SkeletonDetail />
-            ) : (
-              <Paper sx={{ p: 4 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Grid
-                      container
-                      flexDirection="column"
-                      sx={{ width: '100%' }}
-                    >
-                      <Grid item sx={{ width: '100%' }}>
-                        <UploadImage
-                          fileUpload={fileUp}
-                          urlImage={
-                            music.thumbnail && isChangeFile
-                              ? ''
-                              : music.thumbnail
-                          }
-                          setFileUpload={setFileUp}
-                          notShowDelete={!isChangeFile}
-                          style={{ height: '240px' }}
-                        />
+        <>
+          <Grid
+            container
+            spacing={3}
+            flexDirection="column"
+            sx={{ width: '100%', my: 2 }}
+          >
+            <Grid item xs={12}>
+              <Typography variant="h2" gutterBottom textAlign="center">
+                {`Nhạc: ${music.title}`.toUpperCase()}&nbsp;
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {loadingPg ? (
+                <SkeletonDetail />
+              ) : (
+                <Paper sx={{ p: 4 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Grid
+                        container
+                        flexDirection="column"
+                        sx={{ width: '100%' }}
+                      >
+                        <Grid item sx={{ width: '100%' }}>
+                          <UploadImage
+                            fileUpload={fileUp}
+                            urlImage={
+                              music.thumbnail && isChangeFile
+                                ? ''
+                                : music.thumbnail
+                            }
+                            setFileUpload={setFileUp}
+                            notShowDelete={!isChangeFile}
+                            style={{ height: '240px' }}
+                          />
+                        </Grid>
+                        <Grid item>
+                          {music.thumbnail && (
+                            <FormControlLabel
+                              label="Thay đổi ảnh bản nhạc"
+                              control={
+                                <Checkbox
+                                  checked={isChangeFile}
+                                  onChange={handleChangeFile}
+                                />
+                              }
+                            />
+                          )}
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        {music.thumbnail && (
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Grid
+                        container
+                        flexDirection="column"
+                        sx={{ width: '100%' }}
+                      >
+                        <Grid item sx={{ width: '100%' }}>
+                          {isChangeAudio ? (
+                            <FileUpload
+                              value={audio}
+                              onChange={setAudio}
+                              title="Chọn audio cho nhạc tại đây"
+                              accept="audio/*"
+                              buttonText="Tải audio lên"
+                              multiple={false}
+                            />
+                          ) : (
+                            <ReactPlayer
+                              url={
+                                music?.url
+                                  ? music.url
+                                  : 'https://youtu.be/kmYktn0bwqs?si=nLprXeXyO21izTAV'
+                              }
+                              controls
+                              width="100%"
+                              height="100%"
+                              config={{
+                                file: {
+                                  hlsOptions: {
+                                    forceHLS: true,
+                                    debug: false,
+                                    xhrSetup: function (xhr: any, url: any) {
+                                      xhr.setRequestHeader(
+                                        'Authorization',
+                                        `Bearer ${token.accessToken}`
+                                      );
+                                    }
+                                  }
+                                }
+                              }}
+                            />
+                          )}
+                        </Grid>
+                        <Grid item>
                           <FormControlLabel
-                            label="Thay đổi ảnh bản nhạc"
+                            label="Thay đổi audio của nhạc"
                             control={
                               <Checkbox
-                                checked={isChangeFile}
-                                onChange={handleChangeFile}
+                                checked={isChangeAudio}
+                                onChange={handleChangeAudio}
                               />
                             }
                           />
-                        )}
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Grid
-                      container
-                      flexDirection="column"
-                      sx={{ width: '100%' }}
-                    >
-                      <Grid item sx={{ width: '100%' }}>
-                        <FileUpload
-                          value={audio}
-                          onChange={setAudio}
-                          title="Chọn audip cho phim tại đây"
-                          accept="audio/*"
-                          buttonText="Tải audio lên"
-                          multiple={false}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <FormControlLabel
-                          label="Thay đổi video phim"
-                          control={
-                            <Checkbox
-                              checked={isChangeAudio}
-                              onChange={handleChangeAudio}
-                            />
-                          }
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <form onSubmit={handleSubmit(save)}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Controller
-                            name="title"
-                            control={control}
-                            defaultValue={music.title}
-                            render={({
-                              field: { onChange, value },
-                              fieldState: { error }
-                            }) => (
-                              <TextField
-                                label={'Tên Nhạc'}
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                helperText={error ? error.message : null}
-                                fullWidth
-                              />
-                            )}
-                            rules={{ required: 'Không được để trống!' }}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Controller
-                            name="minAge"
-                            control={control}
-                            defaultValue={music.minAge}
-                            render={({
-                              field: { onChange, value },
-                              fieldState: { error }
-                            }) => (
-                              <TextField
-                                label={'Giới hạn độ tuổi'}
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                helperText={error ? error.message : null}
-                                fullWidth
-                                type="number"
-                                InputProps={{
-                                  endAdornment: (
-                                    <Typography
-                                      fontWeight="bold"
-                                      sx={{ px: 1 }}
-                                    >
-                                      +
-                                    </Typography>
-                                  )
-                                }}
-                              />
-                            )}
-                            rules={{
-                              required: 'Không được để trống!',
-                              pattern: {
-                                // prettier-ignore
-                                value: /^(0|[1-9]\d*)(\.\d+)?$/,
-                                message: 'Phải điền vào là một số nguyên dương!'
-                              },
-                              validate: (value) =>
-                                value > 0 || 'Nhập số lớn hơn 0!'
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Controller
-                            name="golds"
-                            control={control}
-                            defaultValue={music.golds}
-                            render={({
-                              field: { onChange, value },
-                              fieldState: { error }
-                            }) => (
-                              <TextField
-                                label={'Giá Vàng'}
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                helperText={error ? error.message : null}
-                                fullWidth
-                                type="number"
-                                InputProps={{
-                                  endAdornment: (
-                                    <Typography
-                                      variant="caption"
-                                      sx={{ px: 1 }}
-                                    >
-                                      Vàng
-                                    </Typography>
-                                  )
-                                }}
-                              />
-                            )}
-                            rules={{
-                              required: 'Không được để trống!',
-                              pattern: {
-                                // prettier-ignore
-                                value: /^(0|[1-9]\d*)(\.\d+)?$/,
-                                message: 'Phải điền vào là một số nguyên dương!'
-                              },
-                              validate: (value) =>
-                                value > 0 || 'Nhập số lớn hơn 0!'
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Controller
-                            name="publishDate"
-                            control={control}
-                            defaultValue={new Date(music.publishDate)}
-                            render={({
-                              field: { onChange, value },
-                              fieldState: { error }
-                            }) => (
-                              <DatePicker
-                                label="Ngày Phát Hành"
-                                value={value}
-                                onChange={onChange}
-                                inputFormat="dd/MM/yyyy"
-                                renderInput={(props: TextFieldProps) => (
-                                  <TextField
-                                    {...props}
-                                    error={!!error}
-                                    helperText={error?.message}
-                                    variant="outlined"
-                                    fullWidth
-                                  />
-                                )}
-                              />
-                            )}
-                            rules={{
-                              required: 'Không được để trống!',
-                              pattern: {
-                                // prettier-ignore
-                                value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                                message:
-                                  'Định dạng ngày tháng năm không chính xác!'
-                              }
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Autocomplete
-                            multiple
-                            options={authors}
-                            disableCloseOnSelect
-                            defaultValue={music.authors}
-                            isOptionEqualToValue={(option, value) =>
-                              option.id === value.id
-                            }
-                            noOptionsText={'Không có kết quả phù hợp'}
-                            onChange={(event, newValue: Author[]) =>
-                              setAuthorIds(newValue.map((item) => item.id))
-                            }
-                            getOptionLabel={(option: Author) => option.name}
-                            renderOption={(props, option, { selected }) => (
-                              <li {...props}>
-                                <Checkbox
-                                  icon={
-                                    <CheckBoxOutlineBlankIcon fontSize="small" />
-                                  }
-                                  checkedIcon={
-                                    <CheckBoxIcon fontSize="small" />
-                                  }
-                                  checked={selected}
-                                />
-                                {option.name}
-                              </li>
-                            )}
-                            renderInput={(params) => (
-                              <TextField {...params} label="Tác Giả" />
-                            )}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Autocomplete
-                            multiple
-                            options={genres}
-                            disableCloseOnSelect
-                            defaultValue={music.genres}
-                            noOptionsText={'Không có kết quả phù hợp'}
-                            onChange={(event, newValue: Genre[]) =>
-                              setGenreIds(newValue.map((item) => item.id))
-                            }
-                            isOptionEqualToValue={(option, value) =>
-                              option.id === value.id
-                            }
-                            getOptionLabel={(option: Genre) => option.name}
-                            renderOption={(props, option, { selected }) => (
-                              <li {...props}>
-                                <Checkbox
-                                  icon={
-                                    <CheckBoxOutlineBlankIcon fontSize="small" />
-                                  }
-                                  checkedIcon={
-                                    <CheckBoxIcon fontSize="small" />
-                                  }
-                                  checked={selected}
-                                />
-                                {option.name}
-                              </li>
-                            )}
-                            renderInput={(params) => (
-                              <TextField {...params} label="Thể Loại" />
-                            )}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <FormControl sx={{ width: '100%' }}>
-                            <InputLabel id="select-label">
-                              Trạng Thái
-                            </InputLabel>
+                    <Grid item xs={12}>
+                      <form onSubmit={handleSubmit(save)}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
                             <Controller
-                              name="state"
+                              name="title"
                               control={control}
-                              defaultValue={music.state}
-                              rules={{ required: 'Trường này bắt buộc' }}
+                              defaultValue={music.title}
                               render={({
                                 field: { onChange, value },
                                 fieldState: { error }
                               }) => (
-                                <Select
-                                  labelId="select-label"
+                                <TextField
+                                  label={'Tên Nhạc'}
+                                  variant="outlined"
                                   value={value}
                                   onChange={onChange}
                                   error={!!error}
-                                  label="Trạng Thái"
-                                >
-                                  <MenuItem value={0}>
-                                    Đang hoạt động (Công khai)
-                                  </MenuItem>
-                                  <MenuItem value={1}>
-                                    Chờ (Chưa công khai)
-                                  </MenuItem>
-                                </Select>
+                                  helperText={error ? error.message : null}
+                                  fullWidth
+                                />
+                              )}
+                              rules={{ required: 'Không được để trống!' }}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Controller
+                              name="minAge"
+                              control={control}
+                              defaultValue={music.minAge}
+                              render={({
+                                field: { onChange, value },
+                                fieldState: { error }
+                              }) => (
+                                <TextField
+                                  label={'Giới hạn độ tuổi'}
+                                  variant="outlined"
+                                  value={value}
+                                  onChange={onChange}
+                                  error={!!error}
+                                  helperText={error ? error.message : null}
+                                  fullWidth
+                                  type="number"
+                                  InputProps={{
+                                    endAdornment: (
+                                      <Typography
+                                        fontWeight="bold"
+                                        sx={{ px: 1 }}
+                                      >
+                                        +
+                                      </Typography>
+                                    )
+                                  }}
+                                />
+                              )}
+                              rules={{
+                                required: 'Không được để trống!',
+                                pattern: {
+                                  // prettier-ignore
+                                  value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                                  message:
+                                    'Phải điền vào là một số nguyên dương!'
+                                },
+                                validate: (value) =>
+                                  value > 0 || 'Nhập số lớn hơn 0!'
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Controller
+                              name="golds"
+                              control={control}
+                              defaultValue={music.golds}
+                              render={({
+                                field: { onChange, value },
+                                fieldState: { error }
+                              }) => (
+                                <TextField
+                                  label={'Giá Vàng'}
+                                  variant="outlined"
+                                  value={value}
+                                  onChange={onChange}
+                                  error={!!error}
+                                  helperText={error ? error.message : null}
+                                  fullWidth
+                                  type="number"
+                                  InputProps={{
+                                    endAdornment: (
+                                      <Typography
+                                        variant="caption"
+                                        sx={{ px: 1 }}
+                                      >
+                                        Vàng
+                                      </Typography>
+                                    )
+                                  }}
+                                />
+                              )}
+                              rules={{
+                                required: 'Không được để trống!',
+                                pattern: {
+                                  // prettier-ignore
+                                  value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                                  message:
+                                    'Phải điền vào là một số nguyên dương!'
+                                },
+                                validate: (value) =>
+                                  value > 0 || 'Nhập số lớn hơn 0!'
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Controller
+                              name="publishDate"
+                              control={control}
+                              defaultValue={new Date(music.publishDate)}
+                              render={({
+                                field: { onChange, value },
+                                fieldState: { error }
+                              }) => (
+                                <DatePicker
+                                  label="Ngày Phát Hành"
+                                  value={value}
+                                  onChange={onChange}
+                                  inputFormat="dd/MM/yyyy"
+                                  renderInput={(props: TextFieldProps) => (
+                                    <TextField
+                                      {...props}
+                                      error={!!error}
+                                      helperText={error?.message}
+                                      variant="outlined"
+                                      fullWidth
+                                    />
+                                  )}
+                                />
+                              )}
+                              rules={{
+                                required: 'Không được để trống!',
+                                pattern: {
+                                  // prettier-ignore
+                                  value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+                                  message:
+                                    'Định dạng ngày tháng năm không chính xác!'
+                                }
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Autocomplete
+                              multiple
+                              options={authors}
+                              disableCloseOnSelect
+                              defaultValue={music.authors}
+                              isOptionEqualToValue={(option, value) =>
+                                option.id === value.id
+                              }
+                              noOptionsText={'Không có kết quả phù hợp'}
+                              onChange={(event, newValue: Author[]) =>
+                                setAuthorIds(newValue.map((item) => item.id))
+                              }
+                              getOptionLabel={(option: Author) => option.name}
+                              renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                  <Checkbox
+                                    icon={
+                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                                    }
+                                    checkedIcon={
+                                      <CheckBoxIcon fontSize="small" />
+                                    }
+                                    checked={selected}
+                                  />
+                                  {option.name}
+                                </li>
+                              )}
+                              renderInput={(params) => (
+                                <TextField {...params} label="Tác Giả" />
                               )}
                             />
-                          </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Controller
-                            name="desc"
-                            control={control}
-                            defaultValue={music.desc}
-                            render={({
-                              field: { onChange, value },
-                              fieldState: { error }
-                            }) => (
-                              <TextField
-                                label={'Mô tả'}
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                helperText={error ? error.message : null}
-                                fullWidth
-                                multiline
-                                minRows={4}
-                                maxRows={6}
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Autocomplete
+                              multiple
+                              options={genres}
+                              disableCloseOnSelect
+                              defaultValue={music.genres}
+                              noOptionsText={'Không có kết quả phù hợp'}
+                              onChange={(event, newValue: Genre[]) =>
+                                setGenreIds(newValue.map((item) => item.id))
+                              }
+                              isOptionEqualToValue={(option, value) =>
+                                option.id === value.id
+                              }
+                              getOptionLabel={(option: Genre) => option.name}
+                              renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                  <Checkbox
+                                    icon={
+                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                                    }
+                                    checkedIcon={
+                                      <CheckBoxIcon fontSize="small" />
+                                    }
+                                    checked={selected}
+                                  />
+                                  {option.name}
+                                </li>
+                              )}
+                              renderInput={(params) => (
+                                <TextField {...params} label="Thể Loại" />
+                              )}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <FormControl sx={{ width: '100%' }}>
+                              <InputLabel id="select-label">
+                                Trạng Thái
+                              </InputLabel>
+                              <Controller
+                                name="state"
+                                control={control}
+                                defaultValue={music.state}
+                                rules={{ required: 'Trường này bắt buộc' }}
+                                render={({
+                                  field: { onChange, value },
+                                  fieldState: { error }
+                                }) => (
+                                  <Select
+                                    labelId="select-label"
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!!error}
+                                    label="Trạng Thái"
+                                  >
+                                    <MenuItem value={0}>
+                                      Đang hoạt động (Công khai)
+                                    </MenuItem>
+                                    <MenuItem value={1}>
+                                      Chờ (Chưa công khai)
+                                    </MenuItem>
+                                  </Select>
+                                )}
                               />
-                            )}
-                            rules={{ required: 'Không được để trống!' }}
-                          />
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Controller
+                              name="desc"
+                              control={control}
+                              defaultValue={music.desc}
+                              render={({
+                                field: { onChange, value },
+                                fieldState: { error }
+                              }) => (
+                                <TextField
+                                  label={'Mô tả'}
+                                  variant="outlined"
+                                  value={value}
+                                  onChange={onChange}
+                                  error={!!error}
+                                  helperText={error ? error.message : null}
+                                  fullWidth
+                                  multiline
+                                  minRows={4}
+                                  maxRows={6}
+                                />
+                              )}
+                              rules={{ required: 'Không được để trống!' }}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <LoadingButton
+                              loading={loading}
+                              type="submit"
+                              variant="outlined"
+                              color={loading ? 'secondary' : 'primary'}
+                              autoFocus
+                              sx={{ float: 'right' }}
+                            >
+                              <span>Cập Nhật Bản Nhạc</span>
+                            </LoadingButton>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                          <LoadingButton
-                            loading={loading}
-                            type="submit"
-                            variant="outlined"
-                            color={loading ? 'secondary' : 'primary'}
-                            autoFocus
-                            sx={{ float: 'right' }}
-                          >
-                            <span>Cập Nhật Bản Nhạc</span>
-                          </LoadingButton>
-                        </Grid>
-                      </Grid>
-                    </form>
+                      </form>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Paper>
-            )}
+                </Paper>
+              )}
+            </Grid>
+          </Grid>
+        </>
+      )}
+      <Dialog onClose={() => {}} open={isProcess}>
+        <DialogTitle>
+          Quá trình tải audio có thể mất vài phút. Vui lòng chờ trong giây lát!
+        </DialogTitle>
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          sx={{ py: 4 }}
+        >
+          <Grid item>
+            <CircularProgress />
           </Grid>
         </Grid>
-      )}
+      </Dialog>
     </>
   );
 };

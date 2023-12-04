@@ -3,6 +3,9 @@ import {
   Autocomplete,
   Box,
   Checkbox,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   Grid,
@@ -34,8 +37,18 @@ import FileUpload from 'react-material-file-upload';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import Status404 from 'src/content/pages/Status/Status404';
 import SkeletonDetail from './SkeletonDetail';
+import ReactPlayer from 'react-player';
+
+interface IToken {
+  accessToken: string;
+  refreshToken: string;
+}
 
 const EditMovie = () => {
+  const login = localStorage.getItem('login');
+  const token: IToken = login
+    ? JSON.parse(login)
+    : { accessToken: '', refreshToken: '' };
   const { handleSubmit, control, reset, watch, setValue } = useForm();
   const naviagate = useNavigate();
   const params = useParams();
@@ -110,6 +123,7 @@ const EditMovie = () => {
   };
 
   useEffect(() => {
+    setIsProcess(false);
     if (params.movieId) {
       reset();
       resetForm();
@@ -136,7 +150,6 @@ const EditMovie = () => {
     setFileUp(null);
     setIsChangeFile(false);
     setIsChangeVideo(false);
-    setIsProcess(false);
     setLoading(false);
     setVideo([]);
     setGenreIds([]);
@@ -230,14 +243,41 @@ const EditMovie = () => {
                       sx={{ width: '100%' }}
                     >
                       <Grid item sx={{ width: '100%' }}>
-                        <FileUpload
-                          value={video}
-                          onChange={setVideo}
-                          title="Chọn video cho phim tại đây"
-                          accept="video/*"
-                          buttonText="Tải video lên"
-                          multiple={false}
-                        />
+                        {isChangeVideo ? (
+                          <FileUpload
+                            value={video}
+                            onChange={setVideo}
+                            title="Chọn video cho phim tại đây"
+                            accept="video/*"
+                            buttonText="Tải video lên"
+                            multiple={false}
+                          />
+                        ) : (
+                          <ReactPlayer
+                            url={
+                              movie?.url
+                                ? movie.url
+                                : 'https://youtu.be/kmYktn0bwqs?si=nLprXeXyO21izTAV'
+                            }
+                            controls
+                            width="100%"
+                            height="100%"
+                            config={{
+                              file: {
+                                hlsOptions: {
+                                  forceHLS: true,
+                                  debug: false,
+                                  xhrSetup: function (xhr: any, url: any) {
+                                    xhr.setRequestHeader(
+                                      'Authorization',
+                                      `Bearer ${token.accessToken}`
+                                    );
+                                  }
+                                }
+                              }
+                            }}
+                          />
+                        )}
                       </Grid>
                       <Grid item>
                         <FormControlLabel
@@ -541,6 +581,22 @@ const EditMovie = () => {
           </Grid>
         </Grid>
       )}
+      <Dialog onClose={() => {}} open={isProcess}>
+        <DialogTitle>
+          Quá trình tải video có thể mất vài phút. Vui lòng chờ trong giây lát!
+        </DialogTitle>
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          sx={{ py: 4 }}
+        >
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+        </Grid>
+      </Dialog>
     </>
   );
 };

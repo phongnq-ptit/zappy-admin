@@ -48,7 +48,7 @@ const EditMusic = Loader(
   lazy(() => import('src/content/pages/Main/Management/Music/EditMusic'))
 );
 const ManageComic = Loader(
-  lazy(() => import('src/content/pages/Main/Management/ManageComic'))
+  lazy(() => import('src/content/pages/Main/Management/Comic'))
 );
 const ManageAuthors = Loader(
   lazy(() => import('src/content/pages/Main/Management/Author'))
