@@ -34,8 +34,6 @@ export default function useApi() {
         return response.data;
       },
       (error) => {
-        console.log(error);
-
         if (!IGNORE_ERRORS.includes(error.response.data.errorCode))
           setGError({ isError: true, message: error.response.data.message });
         return Promise.reject(error);

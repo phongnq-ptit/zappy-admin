@@ -2,7 +2,7 @@ import { Author } from './Author';
 import { Genre } from './Genre';
 
 export interface IComic {
-  id: string;
+  id: number;
   title: string;
   minAge: number;
   desc: string;
@@ -12,5 +12,5 @@ export interface IComic {
   price: number;
   author: Author[];
   genres: Genre[];
-  chaptersCount: number;
+  chaptersCount?: number;
 }
