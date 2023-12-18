@@ -18,6 +18,7 @@ import UploadImage from 'src/components/UploadFile/UploadImage';
 import usePackageApi from 'src/hooks/usePackageApi';
 import { Pathname } from 'src/routes/path';
 import { IAddNewPackage } from 'src/types/interfaces/Package';
+import { getStartTimeAndEndTimeOfDay } from 'src/utils/Helper';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
 
 const AddPackage = () => {
@@ -28,6 +29,7 @@ const AddPackage = () => {
   const { createPackage } = usePackageApi();
 
   const startDate = watch('startDate');
+  const endDate = watch('endDate');
 
   const save = (data: IAddNewPackage) => {
     if (fileUp) data.image = fileUp;
@@ -35,6 +37,13 @@ const AddPackage = () => {
       WarningSnackbar('Cần phải tải ảnh lên!');
       return;
     }
+    const { start, end } = getStartTimeAndEndTimeOfDay(
+      data.startDate,
+      data.endDate
+    );
+    data.startDate = start;
+    data.endDate = end;
+
     setLoading(true);
     createPackage(data)
       .then((response) => {
@@ -196,12 +205,13 @@ const AddPackage = () => {
                         )}
                         rules={{
                           required: 'Không được để trống!',
-                          pattern: {
-                            // prettier-ignore
-                            value: /^(0|[1-9]\d*)(\.\d+)?$/,
-                            message: 'Phải điền vào là một số nguyên dương!'
-                          },
-                          validate: (value) => value > 0 || 'Nhập số lớn hơn 0!'
+                          // pattern: {
+                          //   // prettier-ignore
+                          //   value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                          //   message: 'Phải điền vào là một số nguyên dương!'
+                          // },
+                          validate: (value) =>
+                            value >= 0 || 'Nhập số lớn hơn 0!'
                         }}
                       />
                     </Grid>
@@ -217,10 +227,8 @@ const AddPackage = () => {
                           <DatePicker
                             label="Ngày Bắt Đầu"
                             value={value}
-                            onChange={(date) => {
-                              onChange(date);
-                              setValue('endDate', '', { shouldValidate: true });
-                            }}
+                            maxDate={endDate ? new Date(endDate) : new Date()}
+                            onChange={onChange}
                             inputFormat="dd/MM/yyyy"
                             renderInput={(props: TextFieldProps) => (
                               <TextField
@@ -239,7 +247,12 @@ const AddPackage = () => {
                             // prettier-ignore
                             value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
                             message: 'Định dạng ngày tháng năm không chính xác!'
-                          }
+                          },
+
+                          validate: (value) =>
+                            new Date(value).getTime() <
+                              new Date(endDate && endDate).getTime() ||
+                            'Ngày Bắt Đầu phải nhỏ hơn Ngày Hết Hạn'
                         }}
                       />
                     </Grid>
@@ -255,6 +268,9 @@ const AddPackage = () => {
                           <DatePicker
                             label="Ngày hết hạn"
                             value={value}
+                            minDate={
+                              startDate ? new Date(startDate) : new Date()
+                            }
                             onChange={onChange}
                             inputFormat="dd/MM/yyyy"
                             renderInput={(props: TextFieldProps) => (
@@ -277,7 +293,7 @@ const AddPackage = () => {
                           },
                           validate: (value) =>
                             new Date(value).getTime() >
-                              new Date(startDate).getTime() ||
+                              new Date(startDate && startDate).getTime() ||
                             'Ngày hết hạn phải lớn hơn Ngày Bắt Đầu'
                         }}
                       />

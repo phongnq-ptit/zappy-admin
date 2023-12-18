@@ -53,7 +53,7 @@ const EditAccount = () => {
       .finally(() => {
         setTimeout(() => {
           setLoading(false);
-          reset();
+          // reset();
         }, 750);
       });
   };

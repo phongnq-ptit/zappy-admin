@@ -32,3 +32,10 @@ export const formatterVND = new Intl.NumberFormat('vi-VN', {
   style: 'currency',
   currency: 'VND'
 });
+
+export const getStartTimeAndEndTimeOfDay = (start: Date, end: Date) => {
+  return {
+    start: new Date(start.setHours(0, 0, 0, 0)),
+    end: new Date(end.setHours(23, 59, 59, 999))
+  };
+};

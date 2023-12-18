@@ -26,6 +26,7 @@ import { Pathname } from 'src/routes/path';
 import { IPackage, IUpdatePackage } from 'src/types/interfaces/Package';
 import { SuccessSnackbar, WarningSnackbar } from 'src/utils/ShowSnackbar';
 import SkeletonDetail from './SkeletonDetail';
+import { getStartTimeAndEndTimeOfDay } from 'src/utils/Helper';
 
 const useStyles = makeStyles({
   helpText: {
@@ -63,6 +64,7 @@ const EditPackage = () => {
   const { handleSubmit, control, reset, setValue, watch } = useForm();
 
   const startDate = watch('startDate');
+  const endDate = watch('endDate');
 
   useEffect(() => {
     reset();
@@ -102,6 +104,12 @@ const EditPackage = () => {
   const save = (data: IUpdatePackage) => {
     if (fileUp) data.image = fileUp;
     setLoading(true);
+    const { start, end } = getStartTimeAndEndTimeOfDay(
+      data.startDate,
+      data.endDate
+    );
+    data.startDate = start;
+    data.endDate = end;
     updatePackage(pkg.id, data)
       .then((response) => {
         if (response.success) {
@@ -317,42 +325,11 @@ const EditPackage = () => {
                                     label="Ngày Bắt Đầu"
                                     value={value}
                                     onChange={onChange}
-                                    inputFormat="dd/MM/yyyy"
-                                    renderInput={(props: TextFieldProps) => (
-                                      <TextField
-                                        {...props}
-                                        error={!!error}
-                                        helperText={error?.message}
-                                        variant="outlined"
-                                        fullWidth
-                                      />
-                                    )}
-                                  />
-                                )}
-                                rules={{
-                                  required: 'Không được để trống!',
-                                  pattern: {
-                                    // prettier-ignore
-                                    value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                                    message:
-                                      'Định dạng ngày tháng năm không chính xác!'
-                                  }
-                                }}
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Controller
-                                name="endDate"
-                                control={control}
-                                defaultValue={new Date(pkg.endDate)}
-                                render={({
-                                  field: { onChange, value },
-                                  fieldState: { error }
-                                }) => (
-                                  <DatePicker
-                                    label="Ngày hết hạn"
-                                    value={value}
-                                    onChange={onChange}
+                                    maxDate={
+                                      endDate
+                                        ? new Date(endDate)
+                                        : new Date(pkg.endDate)
+                                    }
                                     inputFormat="dd/MM/yyyy"
                                     renderInput={(props: TextFieldProps) => (
                                       <TextField
@@ -374,8 +351,57 @@ const EditPackage = () => {
                                       'Định dạng ngày tháng năm không chính xác!'
                                   },
                                   validate: (value) =>
+                                    new Date(value).getTime() <
+                                      new Date(
+                                        endDate ? endDate : pkg.endDate
+                                      ).getTime() ||
+                                    'Ngày Bắt Đầu phải nhỏ hơn Ngày Hết Hạn'
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Controller
+                                name="endDate"
+                                control={control}
+                                defaultValue={new Date(pkg.endDate)}
+                                render={({
+                                  field: { onChange, value },
+                                  fieldState: { error }
+                                }) => (
+                                  <DatePicker
+                                    label="Ngày hết hạn"
+                                    value={value}
+                                    onChange={onChange}
+                                    inputFormat="dd/MM/yyyy"
+                                    minDate={
+                                      startDate
+                                        ? new Date(startDate)
+                                        : new Date(pkg.startDate)
+                                    }
+                                    renderInput={(props: TextFieldProps) => (
+                                      <TextField
+                                        {...props}
+                                        error={!!error}
+                                        helperText={error?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                      />
+                                    )}
+                                  />
+                                )}
+                                rules={{
+                                  required: 'Không được để trống!',
+                                  pattern: {
+                                    // prettier-ignore
+                                    value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+                                    message:
+                                      'Định dạng ngày tháng năm không chính xác!'
+                                  },
+                                  validate: (value) =>
                                     new Date(value).getTime() >
-                                      new Date(startDate).getTime() ||
+                                      new Date(
+                                        startDate ? startDate : pkg.startDate
+                                      ).getTime() ||
                                     'Ngày hết hạn phải lớn hơn Ngày Bắt Đầu'
                                 }}
                               />
