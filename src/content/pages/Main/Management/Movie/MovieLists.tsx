@@ -18,7 +18,6 @@ import { useMovieStore } from './store';
 import useMovieApi from 'src/hooks/useMovieApi';
 import MovieItem from './MovieItem';
 import SkeletonMovies from './SkeletonMovies';
-import FilterMovie from './FilterMovie';
 
 const MovieLists = () => {
   const theme = useTheme();
@@ -65,10 +64,7 @@ const MovieLists = () => {
   };
 
   return (
-    <Grid container spacing={2} flexDirection="column">
-      <Grid item xs={12}>
-        <FilterMovie />
-      </Grid>
+    <Grid container spacing={2} flexDirection="column" mt={1}>
       <Grid item xs={12}>
         <Card>
           <TableContainer>

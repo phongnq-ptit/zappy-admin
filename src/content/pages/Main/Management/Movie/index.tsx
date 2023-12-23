@@ -6,6 +6,7 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Pathname } from 'src/routes/path';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import MovieLists from './MovieLists';
+import FilterMovie from './FilterMovie';
 
 const ManageMovie = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const ManageMovie = () => {
           </Grid>
         </Grid>
       </PageTitleWrapper>
+      <FilterMovie />
       <MovieLists />
     </>
   );
