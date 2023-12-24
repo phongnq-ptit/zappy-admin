@@ -65,10 +65,7 @@ const MusicLists = () => {
   };
 
   return (
-    <Grid container spacing={2} flexDirection="column">
-      <Grid item xs={12}>
-        <FilterMusic />
-      </Grid>
+    <Grid container spacing={2} flexDirection="column" mt={1}>
       <Grid item xs={12}>
         <Card>
           <TableContainer>

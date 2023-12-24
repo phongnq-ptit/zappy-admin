@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   FormControl,
@@ -6,7 +6,8 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  Typography
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
@@ -15,6 +16,12 @@ import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 import { useMusicStore } from './store';
 import useMusicApi from 'src/hooks/useMusicApi';
 import DeleteMusicsDialog from './DeleteMusicsDialog';
+import { Genre } from 'src/types/interfaces/Genre';
+import { Author } from 'src/types/interfaces/Author';
+import useGenreApi from 'src/hooks/useGenreApi';
+import useAuthorApi from 'src/hooks/useAuthorApi';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import MoreFilter from 'src/components/Common/Media/MoreFilter';
 
 const FilterMusic = () => {
   const {
@@ -73,53 +80,139 @@ const FilterMusic = () => {
       });
   };
 
+  const [isMore, setIsMore] = useState(false);
+
+  const [cate, setCate] = useState<Genre[]>([]);
+  const [author, setAuthor] = useState<Author[]>([]);
+  const { getGenreMusic } = useGenreApi();
+  const { getAuthorMusic } = useAuthorApi();
+
+  useEffect(() => {
+    Promise.all([
+      getAuthorMusic().then((response) => {
+        setAuthor(response.data.results);
+      }),
+      getGenreMusic().then((response) => {
+        setCate(response.data.results);
+      })
+    ]).finally(() => {
+      // tbd
+    });
+  }, []);
+
+  const getQuery = (key: string) => {
+    return queryParams?.filter ? JSON.parse(queryParams.filter)[key] : '';
+  };
+
+  function getValueQuery(inputString: string, defaultValue: number[] = []) {
+    if (!inputString || typeof inputString !== 'string') {
+      return defaultValue;
+    }
+    const numberArray = inputString.match(/\d+/g);
+    return numberArray ? numberArray.map(Number) : defaultValue;
+  }
+
+  const getStateInQuery = (str: string) => {
+    if (str === '1') return 'Chờ (Chưa công khai)';
+    return 'Đang hoạt động (Công khai)';
+  };
+
+  const genResult = () => {
+    let strs: string[] = [];
+
+    if (queryParams.search) {
+      strs.push(`- Tìm kiếm: '${queryParams.search}'`);
+    }
+
+    if (getQuery('authors.id')) {
+      const au = getValueQuery(getQuery('authors.id'));
+      const auNames = author
+        .filter((item) => au.includes(item.id))
+        .map((item) => item.name);
+      strs.push(`- Tác giả: ${auNames.join(', ')}`);
+    }
+
+    if (getQuery('genres.id')) {
+      const ge = getValueQuery(getQuery('genres.id'));
+      const geNames = cate
+        .filter((item) => ge.includes(item.id))
+        .map((item) => item.name);
+      strs.push(`- Thể loại: ${geNames.join(', ')}`);
+    }
+
+    if (getQuery('state')) {
+      strs.push(`- Trạng thái: ${getStateInQuery(getQuery('state'))}`);
+    }
+
+    if (getQuery('golds')) {
+      const vang = getValueQuery(getQuery('golds'));
+      strs.push(`- Giá vàng: ${vang[0]} vàng - ${vang[1]} vàng`);
+    }
+
+    return strs;
+  };
+
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <FormControl variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-password">
-              Tìm kiếm
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type="text"
-              value={searchStr}
-              endAdornment={
-                <>
-                  {searchStr && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClear}
-                        edge="end"
-                        disabled={loading}
-                        size="small"
-                      >
-                        <ClearTwoToneIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  )}
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleSearch}
-                      edge="end"
-                      disabled={loading}
-                      size="medium"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                </>
-              }
-              label="Tìm kiếm"
-              onChange={onChangeSearch}
-              fullWidth
-            />
-          </FormControl>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={8}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Tìm kiếm
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type="text"
+                  value={searchStr}
+                  endAdornment={
+                    <>
+                      {searchStr && (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClear}
+                            edge="end"
+                            disabled={loading}
+                            size="small"
+                          >
+                            <ClearTwoToneIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      )}
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleSearch}
+                          edge="end"
+                          disabled={loading}
+                          size="medium"
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </>
+                  }
+                  label="Tìm kiếm"
+                  onChange={onChangeSearch}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                onClick={() => setIsMore(true)}
+                startIcon={<FilterListIcon />}
+                disabled={loading}
+              >
+                Lọc Nâng Cao
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           {selected.length !== 0 && (
             <Button
               variant="contained"
@@ -132,10 +225,21 @@ const FilterMusic = () => {
             </Button>
           )}
         </Grid>
-        {queryParams.search && (
-          <Grid item xs={12}>
-            <b>Kết quả tìm kiếm của: </b> <i>{queryParams.search}</i>
-          </Grid>
+        {(queryParams.search || queryParams.filter) && (
+          <React.Fragment>
+            <Grid item xs={12}>
+              <b>Kết quả của: </b>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid sx={{ pl: 3 }} container flexDirection="column">
+                {genResult().map((text, index) => (
+                  <Grid item key={'find' + index}>
+                    <Typography variant="subtitle1">{text}</Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          </React.Fragment>
         )}
       </Grid>
       {openDelete && (
@@ -144,6 +248,17 @@ const FilterMusic = () => {
           setOpen={setOpenDelete}
           onAction={handleRemoveItemLists}
           loading={loadingRemove}
+        />
+      )}
+      {isMore && (
+        <MoreFilter
+          open={isMore}
+          setOpen={setIsMore}
+          queryParams={queryParams}
+          setQueryParams={onChangeQueryParams}
+          type="movie"
+          authors={author}
+          genres={cate}
         />
       )}
     </React.Fragment>

@@ -6,6 +6,7 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Pathname } from 'src/routes/path';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import MusicLists from './MusicLists';
+import FilterMusic from './FilterMusic';
 
 const ManageMusic = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const ManageMusic = () => {
           </Grid>
         </Grid>
       </PageTitleWrapper>
+      <FilterMusic />
       <MusicLists />
     </>
   );
