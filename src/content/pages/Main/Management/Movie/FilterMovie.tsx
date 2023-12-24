@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  Typography
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
@@ -98,6 +100,58 @@ const FilterMovie = () => {
       });
   };
 
+  const getQuery = (key: string) => {
+    return queryParams?.filter ? JSON.parse(queryParams.filter)[key] : '';
+  };
+
+  function getValueQuery(inputString: string, defaultValue: number[] = []) {
+    if (!inputString || typeof inputString !== 'string') {
+      return defaultValue;
+    }
+    const numberArray = inputString.match(/\d+/g);
+    return numberArray ? numberArray.map(Number) : defaultValue;
+  }
+
+  const getStateInQuery = (str: string) => {
+    if (str === '1') return 'Chờ (Chưa công khai)';
+    return 'Đang hoạt động (Công khai)';
+  };
+
+  const genResult = () => {
+    let strs: string[] = [];
+
+    if (queryParams.search) {
+      strs.push(`- Tìm kiếm: '${queryParams.search}'`);
+    }
+
+    if (getQuery('authors.id')) {
+      const au = getValueQuery(getQuery('authors.id'));
+      const auNames = author
+        .filter((item) => au.includes(item.id))
+        .map((item) => item.name);
+      strs.push(`- Tác giả: ${auNames.join(', ')}`);
+    }
+
+    if (getQuery('genres.id')) {
+      const ge = getValueQuery(getQuery('genres.id'));
+      const geNames = cate
+        .filter((item) => ge.includes(item.id))
+        .map((item) => item.name);
+      strs.push(`- Thể loại: ${geNames.join(', ')}`);
+    }
+
+    if (getQuery('state')) {
+      strs.push(`- Trạng thái: ${getStateInQuery(getQuery('state'))}`);
+    }
+
+    if (getQuery('golds')) {
+      const vang = getValueQuery(getQuery('golds'));
+      strs.push(`- Giá vàng: ${vang[0]} vàng - ${vang[1]} vàng`);
+    }
+
+    return strs;
+  };
+
   return (
     <React.Fragment>
       <Grid container spacing={2} alignItems="center">
@@ -171,10 +225,21 @@ const FilterMovie = () => {
             </Button>
           )}
         </Grid>
-        {queryParams.search && (
-          <Grid item xs={12}>
-            <b>Kết quả tìm kiếm của: </b> <i>{queryParams.search}</i>
-          </Grid>
+        {(queryParams.search || queryParams.filter) && (
+          <React.Fragment>
+            <Grid item xs={12}>
+              <b>Kết quả của: </b>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid sx={{ pl: 3 }} container flexDirection="column">
+                {genResult().map((text, index) => (
+                  <Grid item key={'find' + index}>
+                    <Typography variant="subtitle1">{text}</Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          </React.Fragment>
         )}
       </Grid>
       {openDelete && (

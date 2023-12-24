@@ -31,6 +31,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
+import _ from 'lodash';
 
 interface Props {
   queryParams: QueryParams;
@@ -129,11 +130,18 @@ const MoreFilter = ({
     if (numberBtw[0] !== 0 || numberBtw[1] !== 1000)
       _filter = { ..._filter, golds: `$btw:${numberBtw[0]}, ${numberBtw[1]}` };
 
-    setQueryParams({
-      ...queryParams,
-      page: 1,
-      filter: JSON.stringify(_filter)
-    });
+    if (Object.keys(_filter).length !== 0) {
+      setQueryParams({
+        ...queryParams,
+        page: 1,
+        filter: JSON.stringify(_filter)
+      });
+    } else {
+      delete queryParams.filter;
+      setQueryParams({
+        ...queryParams
+      });
+    }
 
     setOpen(false); // close
   };
