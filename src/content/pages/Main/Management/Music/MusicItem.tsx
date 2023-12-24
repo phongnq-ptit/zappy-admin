@@ -122,14 +122,6 @@ const MusicItem = ({ music }: Props) => {
           </Typography>
         </TableCell>
         <TableCell align="center">
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {`${music.views} lượt xem`}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {`${music.likes} lượt thích`}
-          </Typography>
-        </TableCell>
-        <TableCell align="center">
           <Typography
             variant="body1"
             fontWeight="bold"

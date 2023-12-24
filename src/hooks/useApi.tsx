@@ -10,7 +10,8 @@ interface IToken {
 const IGNORE_ERRORS = [
   'user_not_found',
   'package_not_found',
-  'media_not_found'
+  'media_not_found',
+  'comic_not_found'
 ];
 
 export default function useApi() {

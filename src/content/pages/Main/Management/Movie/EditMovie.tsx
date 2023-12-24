@@ -34,7 +34,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { Author } from 'src/types/interfaces/Author';
 import { Genre } from 'src/types/interfaces/Genre';
 import FileUpload from 'react-material-file-upload';
-import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import Status404 from 'src/content/pages/Status/Status404';
 import SkeletonDetail from './SkeletonDetail';
 import ReactPlayer from 'react-player';

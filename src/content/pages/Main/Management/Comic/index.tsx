@@ -6,6 +6,7 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { Pathname } from 'src/routes/path';
 import ComicLists from './ComicLists';
+import FilterComic from './FilterComic';
 
 const ManageComic = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const ManageComic = () => {
           </Grid>
         </Grid>
       </PageTitleWrapper>
+      <FilterComic />
       <ComicLists />
     </>
   );

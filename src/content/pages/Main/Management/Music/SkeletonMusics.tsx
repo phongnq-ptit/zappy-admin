@@ -23,10 +23,6 @@ const SkeletonMusics = () => {
           </TableCell>
           <TableCell align="center">
             <Skeleton />
-            <Skeleton />
-          </TableCell>
-          <TableCell align="center">
-            <Skeleton />
           </TableCell>
           <TableCell align="center">
             <Skeleton />

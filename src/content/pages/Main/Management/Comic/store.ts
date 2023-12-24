@@ -80,6 +80,33 @@ function init() {
     });
   };
 
+  const [tabs, setTabs] = useState<string>('summary');
+  const onChangeTabs = useCallback((value: string) => setTabs(value), []);
+
+  const [comic, setComic] = useState<IComic>({
+    id: 999,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    title: '',
+    minAge: 0,
+    publishDate: new Date(),
+    desc: '',
+    thumbnail: '',
+    views: 0,
+    golds: 0,
+    state: 1,
+    genres: [],
+    authors: [],
+    chaptersCount: 0,
+    isAccess: false,
+    isLike: false,
+    isPlaylist: false
+  });
+  const onChangeComic = useCallback((value: IComic) => setComic(value), []);
+
+  const [reload, setReload] = useState(false);
+  const refeshApi = useCallback(() => setReload(!reload), []);
+
   return {
     listMetadata,
     onChangeListMetadata,
@@ -96,7 +123,13 @@ function init() {
     genres,
     getComicGenres,
     authors,
-    getComicAuthors
+    getComicAuthors,
+    tabs,
+    onChangeTabs,
+    comic,
+    onChangeComic,
+    reload,
+    refeshApi
   };
 }
 

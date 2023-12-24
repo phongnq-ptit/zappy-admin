@@ -50,6 +50,15 @@ const EditMusic = Loader(
 const ManageComic = Loader(
   lazy(() => import('src/content/pages/Main/Management/Comic'))
 );
+const AddComic = Loader(
+  lazy(() => import('src/content/pages/Main/Management/Comic/AddComic'))
+);
+const EditComic = Loader(
+  lazy(
+    () =>
+      import('src/content/pages/Main/Management/Comic/ComicDetail/EditComic')
+  )
+);
 const ManageAuthors = Loader(
   lazy(() => import('src/content/pages/Main/Management/Author'))
 );
@@ -124,6 +133,14 @@ const routes: RouteObject[] = [
       {
         path: Pathname.comics,
         element: <ManageComic />
+      },
+      {
+        path: `${Pathname.comics}/add`,
+        element: <AddComic />
+      },
+      {
+        path: `${Pathname.comics}/:comicId`,
+        element: <EditComic />
       },
       {
         path: Pathname.musics,

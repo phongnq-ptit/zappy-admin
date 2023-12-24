@@ -16,7 +16,6 @@ import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { useComicStore } from './store';
 import useComicApi from 'src/hooks/useComicApi';
-import FilterComic from './FilterComic';
 import SkeletonComics from './SkeletonComics';
 import ComicItem from './ComicItem';
 
@@ -65,10 +64,7 @@ const ComicLists = () => {
   };
 
   return (
-    <Grid container spacing={2} flexDirection="column">
-      <Grid item xs={12}>
-        <FilterComic />
-      </Grid>
+    <Grid container spacing={2} flexDirection="column" mt={1}>
       <Grid item xs={12}>
         <Card>
           <TableContainer>
@@ -78,10 +74,9 @@ const ComicLists = () => {
                   <TableCell align="center">
                     <Checkbox color="primary" onChange={handleSelectAll} />
                   </TableCell>
-                  <TableCell>Tên Phim</TableCell>
+                  <TableCell>Tên Truyện</TableCell>
                   <TableCell align="center">Ngày ra mắt</TableCell>
-                  <TableCell align="center">Thời Lượng</TableCell>
-                  <TableCell align="center">Lượt xem/Lượt thích</TableCell>
+                  <TableCell align="center">Số tập</TableCell>
                   <TableCell align="center">Giá vàng</TableCell>
                   <TableCell align="center">Trạng thái</TableCell>
                   <TableCell align="right"></TableCell>

@@ -256,7 +256,7 @@ const FilterMusic = () => {
           setOpen={setIsMore}
           queryParams={queryParams}
           setQueryParams={onChangeQueryParams}
-          type="movie"
+          type="music"
           authors={author}
           genres={cate}
         />
