@@ -34,14 +34,14 @@ const PreviewChapter = ({ chapter, open, setOpen }: Props) => {
 
   const update = () => {
     setLoading(true);
-    updateChapter(chapter.id, MovieState.InActive)
+    updateChapter(chapter.id, MovieState.Active)
       .then((response) => {
         if (response.success) {
           SuccessSnackbar('Công khai thành công tập truyện!');
           onChangeChapters(
             chapters.map((item) => {
               if (item.id === chapter.id) {
-                return { ...chapter, state: MovieState.InActive };
+                return { ...chapter, state: MovieState.Active };
               }
               return item;
             })
@@ -100,7 +100,7 @@ const PreviewChapter = ({ chapter, open, setOpen }: Props) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          {chapter.state === MovieState.Active && (
+          {chapter.state === MovieState.InActive && (
             <LoadingButton
               loading={loadingBtn}
               variant="outlined"

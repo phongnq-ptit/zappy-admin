@@ -427,10 +427,10 @@ const EditPackage = () => {
                                       error={!!error}
                                       label="Trạng Thái"
                                     >
-                                      <MenuItem value={0}>
+                                      <MenuItem value={1}>
                                         Đang hoạt động (Công khai)
                                       </MenuItem>
-                                      <MenuItem value={1}>
+                                      <MenuItem value={0}>
                                         Chờ (Chưa công khai)
                                       </MenuItem>
                                     </Select>

@@ -42,12 +42,12 @@ const MusicItem = ({ music }: Props) => {
   const getLabelState = (_music: IMusic) => {
     const { state } = _music;
     switch (state) {
-      case 0:
+      case 1:
         return {
           color: 'success',
           text: 'Đang hoạt động'
         };
-      case 1:
+      case 0:
         return {
           color: 'warning',
           text: 'Chưa công khai'

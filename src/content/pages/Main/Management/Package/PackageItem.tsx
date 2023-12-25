@@ -67,12 +67,12 @@ const PackageItem = ({ _package }: Props) => {
         text: 'Đã hết hạn'
       };
     switch (state) {
-      case 0:
+      case 1:
         return {
           color: 'success',
           text: 'Đang hoạt động'
         };
-      case 1:
+      case 0:
         return {
           color: 'warning',
           text: 'Chưa công khai'

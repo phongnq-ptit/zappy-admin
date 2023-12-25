@@ -113,7 +113,7 @@ const FilterMovie = () => {
   }
 
   const getStateInQuery = (str: string) => {
-    if (str === '1') return 'Chờ (Chưa công khai)';
+    if (str === '0') return 'Chờ (Chưa công khai)';
     return 'Đang hoạt động (Công khai)';
   };
 

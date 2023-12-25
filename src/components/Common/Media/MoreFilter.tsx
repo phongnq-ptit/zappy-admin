@@ -68,8 +68,8 @@ const MoreFilter = ({
     if (!str || typeof str !== 'string') {
       return 'all';
     }
-    if (str === '1') return 'pending';
-    if (str === '0') return 'public';
+    if (str === '0') return 'pending';
+    if (str === '1') return 'public';
     return 'all';
   };
   const [status, setStatus] = useState<string>(
@@ -148,8 +148,8 @@ const MoreFilter = ({
 
   const getFilterState = () => {
     if (status === 'all') return undefined;
-    if (status === 'public') return '0';
-    return '1';
+    if (status === 'public') return '1';
+    return '0';
   };
 
   const convert$in = (arr: number[]) => {
