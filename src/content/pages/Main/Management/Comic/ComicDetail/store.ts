@@ -62,6 +62,9 @@ function init() {
     []
   );
 
+  const [reload, setReload] = useState(false);
+  const refeshApi = useCallback(() => setReload(!reload), []);
+
   return {
     listMetadata,
     onChangeListMetadata,
@@ -74,7 +77,9 @@ function init() {
     chapters,
     onChangeChapters,
     selected,
-    onChangeSelected
+    onChangeSelected,
+    reload,
+    refeshApi
   };
 }
 

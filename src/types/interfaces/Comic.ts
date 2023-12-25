@@ -36,4 +36,22 @@ export interface IAddNewComic {
 
 export interface IChapter {
   id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  chap: number;
+  imageUrl: {
+    index?: number;
+    url: string;
+  }[];
+  views: number;
+  state: MovieState;
+}
+
+export interface IAddNewChapter {
+  name: string;
+  chap: number;
+  images: Blob[];
+  comicId: number;
+  state: MovieState;
 }
