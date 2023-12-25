@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import { IComic } from 'src/types/interfaces/Comic';
 import Label from 'src/components/Label';
 import Edit from './Edit';
+import SkeletonChapterDetail from './SkeletonChapterDetail';
 
 const useStyles = makeStyles({
   titleColor: {
@@ -96,8 +97,7 @@ const EditComic = () => {
       ) : (
         <>
           {loading ? (
-            // <SkeletonAccDetail />
-            <>loading</>
+            <SkeletonChapterDetail />
           ) : (
             <>
               <Helmet>

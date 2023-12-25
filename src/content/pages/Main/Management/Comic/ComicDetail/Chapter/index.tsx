@@ -24,6 +24,7 @@ import _ from 'lodash';
 import { SuccessSnackbar } from 'src/utils/ShowSnackbar';
 import DeleteChapterDialog from './DeleteChapterDialog';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
+import SkeletonChapterLists from './SkeletonChapterLists';
 
 const ChapterLists = () => {
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ const ChapterLists = () => {
           )}
         </Grid>
         <Grid item>
-          <Grid container spacing={2} flexDirection="column" mt={1}>
+          <Grid container spacing={2} flexDirection="column">
             <Grid item xs={12}>
               <Card>
                 <TableContainer>
@@ -142,8 +143,7 @@ const ChapterLists = () => {
                     </TableHead>
                     <TableBody>
                       {loading ? (
-                        // <SkeletonMovies />
-                        <>skelaton</>
+                        <SkeletonChapterLists />
                       ) : (
                         chapters.map((value) => (
                           <ChapterItem chapter={value} key={value.id} />
