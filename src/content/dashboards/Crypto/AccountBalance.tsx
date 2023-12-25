@@ -174,18 +174,6 @@ function AccountBalance() {
                 </Box>
               </Box>
             </Box>
-            <Grid container spacing={3}>
-              <Grid sm item>
-                <Button fullWidth variant="outlined">
-                  Send
-                </Button>
-              </Grid>
-              <Grid sm item>
-                <Button fullWidth variant="contained">
-                  Receive
-                </Button>
-              </Grid>
-            </Grid>
           </Box>
         </Grid>
         <Grid
