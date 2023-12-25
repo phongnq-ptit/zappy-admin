@@ -23,13 +23,6 @@ const SkeletonMovies = () => {
           </TableCell>
           <TableCell align="center">
             <Skeleton />
-            <Skeleton />
-          </TableCell>
-          <TableCell align="center">
-            <Skeleton />
-          </TableCell>
-          <TableCell align="center">
-            <Skeleton />
           </TableCell>
           <TableCell>
             <Grid container spacing={2}>

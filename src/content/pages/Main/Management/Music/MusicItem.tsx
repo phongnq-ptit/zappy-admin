@@ -118,17 +118,6 @@ const MusicItem = ({ music }: Props) => {
             gutterBottom
             noWrap
           >
-            {`${music?.duration || 'N/A'} phút`}
-          </Typography>
-        </TableCell>
-        <TableCell align="center">
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-            color="text.primary"
-            gutterBottom
-            noWrap
-          >
             {`${music.golds} vàng`}
           </Typography>
         </TableCell>

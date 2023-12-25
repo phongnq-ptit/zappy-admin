@@ -118,25 +118,6 @@ const MovieItem = ({ movie }: Props) => {
             gutterBottom
             noWrap
           >
-            {`${movie?.duration || 'N/A'} phút`}
-          </Typography>
-        </TableCell>
-        <TableCell align="center">
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {`${movie.views} lượt xem`}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {`${movie.likes} lượt thích`}
-          </Typography>
-        </TableCell>
-        <TableCell align="center">
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-            color="text.primary"
-            gutterBottom
-            noWrap
-          >
             {`${movie.golds} vàng`}
           </Typography>
         </TableCell>
