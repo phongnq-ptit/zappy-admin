@@ -12,6 +12,16 @@ import {
   styled
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import PersonIcon from '@mui/icons-material/Person';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CategoryIcon from '@mui/icons-material/Category';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import FaceIcon from '@mui/icons-material/Face';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -75,6 +85,54 @@ const CardAddAction = styled(Card)(
 );
 
 function Wallets() {
+  const data = [
+    {
+      icon: <PersonIcon />,
+      title: 'Người Dùng',
+      value: 4
+    },
+    {
+      title: 'Hồ Sơ',
+      value: 3,
+      icon: <AccountBoxIcon />
+    },
+    {
+      title: 'Truyện',
+      value: 6,
+      icon: <AutoStoriesIcon />
+    },
+    {
+      title: 'Tập Truyện',
+      value: 20,
+      icon: <StickyNote2Icon />
+    },
+    {
+      title: 'Phim',
+      value: 4,
+      icon: <LiveTvIcon />
+    },
+    {
+      title: 'Nhạc',
+      value: 11,
+      icon: <MusicNoteIcon />
+    },
+    {
+      title: 'Tác Giả',
+      value: 13,
+      icon: <FaceIcon />
+    },
+    {
+      title: 'Thể Loại',
+      value: 18,
+      icon: <CategoryIcon />
+    },
+    {
+      title: 'Gói Ưu Đãi',
+      value: 5,
+      icon: <LoyaltyIcon />
+    }
+  ];
+
   return (
     <>
       <Box
@@ -85,102 +143,43 @@ function Wallets() {
           pb: 3
         }}
       >
-        <Typography variant="h3">Wallets</Typography>
+        <Typography variant="h3">Số Lượng Tài Nguyên</Typography>
       </Box>
       <Grid container spacing={3}>
-        <Grid xs={12} sm={6} md={3} item>
-          <Card
-            sx={{
-              px: 1
-            }}
-          >
-            <CardContent>
-              <AvatarWrapper>
-                <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
-                />
-              </AvatarWrapper>
-              <Typography variant="h5" noWrap>
-                Bitcoin
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                BTC
-              </Typography>
-              <Box
-                sx={{
-                  pt: 3
-                }}
-              >
-                <Typography variant="h3" gutterBottom noWrap>
-                  $3,586.22
+        {data.map((item) => (
+          <Grid xs={12} sm={6} md={3} item key={item.value}>
+            <Card
+              sx={{
+                px: 1
+              }}
+            >
+              <CardContent>
+                <AvatarWrapper sx={{ color: 'black' }}>
+                  {item.icon}
+                </AvatarWrapper>
+                <Typography variant="h5" noWrap>
+                  {item.title}
                 </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid xs={12} sm={6} md={3} item>
-          <Card
-            sx={{
-              px: 1
-            }}
-          >
-            <CardContent>
-              <AvatarWrapper>
-                <img
-                  alt="Ripple"
-                  src="/static/images/placeholders/logo/ripple.png"
-                />
-              </AvatarWrapper>
-              <Typography variant="h5" noWrap>
-                Ripple
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                XRP
-              </Typography>
-              <Box
-                sx={{
-                  pt: 3
-                }}
-              >
-                <Typography variant="h3" gutterBottom noWrap>
-                  $586.83
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid xs={12} sm={6} md={3} item>
-          <Card
-            sx={{
-              px: 1
-            }}
-          >
-            <CardContent>
-              <AvatarWrapper>
-                <img
-                  alt="Cardano"
-                  src="/static/images/placeholders/logo/cardano.png"
-                />
-              </AvatarWrapper>
-              <Typography variant="h5" noWrap>
-                Cardano
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                ADA
-              </Typography>
-              <Box
-                sx={{
-                  pt: 3
-                }}
-              >
-                <Typography variant="h3" gutterBottom noWrap>
-                  $54,985.00
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+                <Box
+                  sx={{
+                    pt: 3
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={8}>
+                      <Typography variant="subtitle1">Số lượng:</Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography variant="h1" gutterBottom noWrap>
+                        {item.value}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </>
   );
